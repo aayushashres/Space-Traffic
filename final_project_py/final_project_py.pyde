@@ -12,13 +12,12 @@ class Character():
     def display(self):
         
         stroke(255,0,0)
-        ellipse(self.x,self.y,self.r,self.r)
+        fill(255)
+        ellipse(self.x,self.y,self.r*2,self.r*2)
         
         
         
     def update(self):
-        
-       
         self.x+=dx
         self.y+=dy
         
@@ -27,13 +26,14 @@ class Character():
 
 
 
-class Frog(Character):
+class Alien(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
 
     def update(self):
         
+       
         if self.keyHandler[LEFT]:
             self.dx = -5
             
@@ -51,33 +51,143 @@ class Frog(Character):
             
         self.x+=self.dx
         self.y+=self.dy
-frog=Frog(10,20,20,None,None,None)
+        
+        if self.x-self.r<0:
+            self.x=self.r
+            
+        if self.y+self.r>game.h:
+            self.y=game.h-self.r  
+            
+        if self.x+self.r>game.w:
+            self.x=game.w-self.r
+        
+class Asteroid(Character):
+     def __init__(self,x,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h)
+        
+        
+     def update(self):
+         self.x+=2
+         if self.x > 800:
+             self.x = 0
+         
+         
+        
+     def display(self):
+         stroke(255)
+         fill(255)
+         rect(self.x,self.y,30,10)
+         
+class Rocket(Character):
+    def __init__(self,x,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h)
+        
+    def update(self):
+        self.x+=2
+        if self.x > 800:
+            self.x = 0
+        
+    def display(self):
+        stroke(255)
+        fill(255,0,0)
+        rect(self.x,self.y,30,10)
+        
+        
+class Destination(Character):
+    def __init__(self,x,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h) 
+        
+    def update(self):
+        self.dx=0
+        self.dy=0
+        
+    def display(self):
+        stroke(255)
+        fill(0,0,255)
+        rect(self.x,self.y,50,50)
+        
+    
+    
+        
+class Game():
+    def __init__(self,w,h):
+        self.w=w
+        self.h=h
+        self.pause=False
+        self.alien=Alien(self.w//2,self.h-20,20,None,None,None)
+        self.gamestate="play"
+        self.dest=Destination(self.w//2,5,30,None,None,None)
+        self.asteroids=[]
+        for i in range(10):
+            
+            self.asteroids.append(Asteroid(i*100,self.h-100,30,None,None,None))
+            
+        self.rockets=[]
+        for i in range(10):
+            self.rockets.append(Rocket(i*100,self.h-500,30,None,None,None))
+            
+        
+    def display(self):
+        
+        
+        
+        for x in self.asteroids:
+            x.display()
+        self.dest.display()
+            
+        for r in self.rockets:
+            r.display()
+            
+        self.alien.display()
+        
+        
+    def update(self):
+        self.alien.update()
+        for x in self.asteroids:
+            x.update()
+            
+        for x in self.rockets:
+            x.update()
+            
+        
+game=Game(800,800)
 
 def setup():
-   size(800,800)
+   size(game.w,game.h)
    
 def draw():
-    background(0)
-    frog.update()
-    frog.display()
+    
+    if game.pause==False:
+        
+        background(0)
+        game.update()
+        game.display()
 
 def keyPressed():
     if keyCode == LEFT:
-        frog.keyHandler[LEFT] = True
+        game.alien.keyHandler[LEFT] = True
     elif keyCode == RIGHT:
-        frog.keyHandler[RIGHT] = True
+        game.alien.keyHandler[RIGHT] = True
     elif keyCode == UP:
-        frog.keyHandler[UP] = True
+        game.alien.keyHandler[UP] = True
     elif keyCode == DOWN:
-        frog.keyHandler[DOWN]=True
+        game.alien.keyHandler[DOWN]=True
+    elif keyCode==80:
+        if game.pause == True:
+            game.pause=False
+        else:
+            game.pause=True
+            
+            
+        
         
         
 def keyReleased():
     if keyCode == LEFT:
-        frog.keyHandler[LEFT] = False
+        game.alien.keyHandler[LEFT] = False
     elif keyCode == RIGHT:
-        frog.keyHandler[RIGHT] = False
+        game.alien.keyHandler[RIGHT] = False
     elif keyCode == UP:
-        frog.keyHandler[UP] = False
+        game.alien.keyHandler[UP] = False
     elif keyCode ==DOWN:
-        frog.keyHandler[DOWN]=False
+        game.alien.keyHandler[DOWN]=False
