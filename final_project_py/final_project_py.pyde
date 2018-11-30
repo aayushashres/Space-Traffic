@@ -24,6 +24,7 @@ class Character():
         
         
     def update(self):
+    
         self.x+=dx
         self.y+=dy
         
@@ -63,6 +64,57 @@ class Alien(Character):
         if self.y+self.r>game.h:
             self.y=game.h-self.r  
             
+        if self.x+self.r>=game.w//2:
+            self.x=(game.w//2)-self.r
+            
+        if self.y+self.r<game.h//2:
+            self.y=game.h//2 
+            
+        if self.y <= game.h // 2:
+            game.y += self.dy
+        
+         #COLLISION detection   
+       
+        for x in game.asteroids:
+            # print(self.distance(x))
+            if self.distance(x) <= self.r+ x.r :
+                game.gamestate="over"
+                 
+        
+    def distance(self,target):
+        
+        return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+    
+class Alien2(Character):
+    def __init__(self,x,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h)
+        self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
+
+    def update(self):
+        
+        if self.keyHandler[LEFT]:
+            self.dx = -10
+        elif self.keyHandler[RIGHT]:
+            self.dx = 10
+        elif self.keyHandler[UP]:
+            self.dx = 0
+            self.dy = -10
+        elif self.keyHandler[DOWN]:
+            self.dx=0
+            self.dy = 10
+        else:
+            self.dx = self.dy = 0
+            
+        self.x+=self.dx
+        self.y+=self.dy
+        
+        if self.x-self.r<=game.w//2:
+            self.x=(game.w//2)+self.r
+            
+        if self.y+self.r>game.h:
+            self.y=game.h-self.r  
+            
         if self.x+self.r>game.w:
             self.x=game.w-self.r
             
@@ -84,6 +136,7 @@ class Alien(Character):
         
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
     
+    
 class Asteroid(Character):
      def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
@@ -94,7 +147,17 @@ class Asteroid(Character):
          self.x+=2
          if self.x > 400:
              self.x = 0
-             
+         if game.alien.dy<0 and game.alien.y<=game.h//2:
+            self.dy=(game.alien.dy)*-1
+            self.y+=self.dy
+         else:
+            self.dy=game.alien.dy 
+            if self.y>=650 : #WORK
+                self.y-=self.dy  
+            
+         # print (self.y, self.dy, game.alien.y, game.h//2)
+            
+                
     
          
          
@@ -146,7 +209,8 @@ class Game():
         self.w=w
         self.h=h
         self.pause=False
-        self.alien=Alien(self.w//2,self.h-20,20,"alien2.png",40,40)
+        self.alien=Alien(self.w//4,self.h-20,20,"alien2.png",40,40)
+        self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
         self.y=0
         self.gamestate="play"
         # self.dest=Destination(self.w//2,5,30,None,None,None)
@@ -169,7 +233,11 @@ class Game():
         
         image (self.bg, 0,0,self.w,self.h-y,              0,y,self.w,self.h) 
         image (self.bg, 0,self.h-y,self.w,y,    0,0,self.w,y)
-        # image (img,self.w-x,0,x,self.w,0,0,x,self.h)
+        
+        print (self.h-y)
+       
+
+        
         # image (self.bg,0,0,self.w,self.h)
         line(400,0,400,800)
         
@@ -182,11 +250,13 @@ class Game():
             
         
         self.alien.display()
+        self.alien2.display()
         
         
         
     def update(self):
         self.alien.update()
+        self.alien2.update()
         for x in self.asteroids:
             x.update()
             
@@ -219,17 +289,33 @@ def draw():
 def keyPressed():
     if keyCode == LEFT:
         game.alien.keyHandler[LEFT] = True
+        
     elif keyCode == RIGHT:
         game.alien.keyHandler[RIGHT] = True
     elif keyCode == UP:
         game.alien.keyHandler[UP] = True
     elif keyCode == DOWN:
         game.alien.keyHandler[DOWN]=True
+        
+        
+    if keyCode == 65:
+        game.alien2.keyHandler[LEFT] = True
+        
+    elif keyCode == 68:
+        game.alien2.keyHandler[RIGHT] = True
+    elif keyCode == 87:
+        game.alien2.keyHandler[UP] = True
+    elif keyCode == 83:
+        game.alien2.keyHandler[DOWN]=True
+    
+
     elif keyCode==80:
         if game.pause == True:
             game.pause=False
         else:
             game.pause=True
+            
+    
             
             
         
@@ -238,9 +324,24 @@ def keyPressed():
 def keyReleased():
     if keyCode == LEFT:
         game.alien.keyHandler[LEFT] = False
+       
     elif keyCode == RIGHT:
         game.alien.keyHandler[RIGHT] = False
+        
     elif keyCode == UP:
         game.alien.keyHandler[UP] = False
+        
     elif keyCode ==DOWN:
         game.alien.keyHandler[DOWN]=False
+        
+        
+    if keyCode==65:
+        game.alien2.keyHandler[LEFT] = False
+    elif keyCode==68:
+        game.alien2.keyHandler[RIGHT] = False
+    elif keyCode == 87:
+        game.alien2.keyHandler[UP] = False
+    elif keyCode==83:
+        game.alien2.keyHandler[DOWN] = False
+     
+         
