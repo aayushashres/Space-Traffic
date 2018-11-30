@@ -27,6 +27,8 @@ class Character():
         self.x+=dx
         self.y+=dy
         
+        
+        
     
     
 
@@ -64,13 +66,16 @@ class Alien(Character):
         if self.x+self.r>game.w:
             self.x=game.w-self.r
             
-        # if self.y <= game.h // 2:
-        #     game.y += self.y
+        if self.y+self.r<game.h//2:
+            self.y=game.h//2 
+            
+        if self.y <= game.h // 2:
+            game.y += self.dy
         
          #COLLISION detection   
        
         for x in game.asteroids:
-            print(self.distance(x))
+            # print(self.distance(x))
             if self.distance(x) <= self.r+ x.r :
                 game.gamestate="over"
                  
@@ -89,16 +94,18 @@ class Asteroid(Character):
          self.x+=2
          if self.x > 400:
              self.x = 0
+             
+    
          
          
         
      def display(self):
     
-        # stroke(255)
-        # fill(255)
-        # rect(self.x,self.y,30,10)
-        # fill(0,255,0)
-        # rect(self.x+400,self.y,30,10)
+        stroke(255)
+        fill(255)
+        rect(self.x,self.y,30,10)
+        fill(0,255,0)
+        rect(self.x+400,self.y,30,10)
         
         image (self.img,self.x,self.y)
         image (self.img, self.x+400, self.y)
@@ -156,7 +163,14 @@ class Game():
             
         
     def display(self):
-        image (self.bg,0,0,self.w,self.h)
+        
+        y=self.y % self.h
+        # print(self.w, self.h, y)
+        
+        image (self.bg, 0,0,self.w,self.h-y,              0,y,self.w,self.h) 
+        image (self.bg, 0,self.h-y,self.w,y,    0,0,self.w,y)
+        # image (img,self.w-x,0,x,self.w,0,0,x,self.h)
+        # image (self.bg,0,0,self.w,self.h)
         line(400,0,400,800)
         
         for x in self.asteroids:
