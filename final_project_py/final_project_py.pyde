@@ -46,11 +46,11 @@ class Character():
         if self.y <= game.h // 2:
             game.y += self.dy
         if self.y+self.r<game.h//2:
-            self.y=game.h//2 wwww
+            self.y=game.h//2 
         
         
     
-    class Alien(Character):
+class Alien(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
@@ -188,6 +188,8 @@ class Game():
         self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
         self.y=0
         self.gamestate="play"
+        self.framerate=0
+        self.time=0
         # self.dest=Destination(self.w//2,5,30,None,None,None)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
@@ -202,7 +204,7 @@ class Game():
             
         
     def display(self):
-        
+        self.framerate+=2
         y=self.y % self.h
         # print(self.w, self.h, y)
         
@@ -226,6 +228,17 @@ class Game():
         
         self.alien.display()
         self.alien2.display()
+        
+        stroke(255)
+        fill(255)
+        text("TIME",50,40)
+        fill(0)
+        rect(50,50,100,20)
+        self.time=(self.framerate//60)
+        fill(255)
+        rect(50,50,max(0,100-(self.time*1)),20)
+        
+    
         
         
         
@@ -264,7 +277,6 @@ def draw():
 def keyPressed():
     if keyCode == LEFT:
         game.alien.keyHandler[LEFT] = True
-        
     elif keyCode == RIGHT:
         game.alien.keyHandler[RIGHT] = True
     elif keyCode == UP:
@@ -272,43 +284,29 @@ def keyPressed():
     elif keyCode == DOWN:
         game.alien.keyHandler[DOWN]=True
         
-        
     if keyCode == 65:
         game.alien2.keyHandler[LEFT] = True
-        
     elif keyCode == 68:
         game.alien2.keyHandler[RIGHT] = True
     elif keyCode == 87:
         game.alien2.keyHandler[UP] = True
     elif keyCode == 83:
         game.alien2.keyHandler[DOWN]=True
-    
-
     elif keyCode==80:
         if game.pause == True:
             game.pause=False
         else:
-            game.pause=True
-            
-    
-            
-            
-        
-        
+            game.pause=True    
         
 def keyReleased():
     if keyCode == LEFT:
         game.alien.keyHandler[LEFT] = False
-       
     elif keyCode == RIGHT:
         game.alien.keyHandler[RIGHT] = False
-        
     elif keyCode == UP:
         game.alien.keyHandler[UP] = False
-        
     elif keyCode ==DOWN:
         game.alien.keyHandler[DOWN]=False
-        
         
     if keyCode==65:
         game.alien2.keyHandler[LEFT] = False
