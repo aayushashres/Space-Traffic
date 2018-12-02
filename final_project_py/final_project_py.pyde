@@ -56,7 +56,23 @@ class Alien(Character):
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
 
     def update(self):
-        Character.update(self)    
+        # Character.update(self)    
+        
+        if self.keyHandler[LEFT]:
+            self.dx = -10
+        elif self.keyHandler[RIGHT]:
+            self.dx = 10
+        elif self.keyHandler[UP]:
+            self.dx = 0
+            self.dy = -10
+        elif self.keyHandler[DOWN]:
+            self.dx=0
+            self.dy = 10
+        else:
+            self.dx = self.dy = 0
+            
+        self.x+=self.dx
+        self.y+=self.dy
         
         if self.x-self.r<0:
             self.x=self.r
@@ -64,6 +80,14 @@ class Alien(Character):
         if self.x+self.r>=game.w//2:
             self.x=(game.w//2)-self.r
             
+        # if self.y>=game.h//2:
+        #     game.y=self.dy
+        if self.y+self.r>game.h:
+            self.y=game.h-self.r
+        if self.y <= game.h // 2:
+            game.y += self.dy
+        if self.y+self.r<game.h//2:
+            self.y=game.h//2 
         
 
          #COLLISION detection   
@@ -85,14 +109,49 @@ class Alien2(Character):
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
 
     def update(self):
-        Character.update(self)
-    
-        if self.x-self.r<=game.w//2:
-            self.x=(game.w//2)+self.r
-    
-        if self.x+self.r>game.w:
-            self.x=game.w-self.r
+        
+        if self.keyHandler[LEFT]:
+            self.dx = -10
+        elif self.keyHandler[RIGHT]:
+            self.dx = 10
+        elif self.keyHandler[UP]:
+            self.dx = 0
+            self.dy = -10
+        elif self.keyHandler[DOWN]:
+            self.dx=0
+            self.dy = 10
+        else:
+            self.dx = self.dy = 0
             
+        self.x+=self.dx
+        self.y+=self.dy
+        
+        if self.x-self.r<0:
+            self.x=self.r
+            
+        if self.x+self.r>=game.w//2:
+            self.x=(game.w//2)-self.r
+            
+        # if self.y>=game.h//2:
+        #     game.y=self.dy
+        if self.y+self.r>game.h:
+            self.y=game.h-self.r
+        if self.y <= game.h // 2:
+            game.y1 += self.dy
+        if self.y+self.r<game.h//2:
+            self.y=game.h//2 
+        
+        # Character.update(self)
+    
+        # if self.x-self.r<=game.w//2:
+        #     self.x=(game.w//2)+self.r
+    
+        # if self.x+self.r>game.w:
+        #     self.x=game.w-self.r
+            
+            
+        # if self.y>=game.h:
+        #     game.y1=self.dy
         # if self.y+self.r<game.h//2:
         #     self.y=game.h//2 
             
@@ -120,15 +179,18 @@ class Asteroid(Character):
         
      def update(self):
          self.x+=2
-         if self.x > 400:
+         if self.x > game.w//2:
              self.x = 0
-         if game.alien.dy<0 and game.alien.y<=game.h//2:
-            self.dy=(game.alien.dy)*-1
-            self.y+=self.dy
-         else:
-            self.dy=game.alien.dy 
-            if self.y>=650 : #WORK
-                self.y-=self.dy  
+         for x in game.asteroids:
+            if x.x<=game.w//2: 
+                # print (x.x)
+                if game.alien.dy<0 and game.alien.y<=game.h//2:
+                    self.dy=(game.alien.dy)*-1
+                    self.y+=self.dy
+                else:
+                    self.dy=game.alien.dy 
+                    if self.y>=650 : #WORK
+                        self.y-=self.dy  
             
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
@@ -143,10 +205,10 @@ class Asteroid(Character):
         fill(255)
         rect(self.x,self.y,30,10)
         fill(0,255,0)
-        rect(self.x+400,self.y,30,10)
+        rect(self.x+game.w//2,self.y,30,10)
         
         image (self.img,self.x,self.y)
-        image (self.img, self.x+400, self.y)
+        image (self.img, self.x+game.w//2, self.y)
          
 class Rocket(Character):
     def __init__(self,x,y,r,img,w,h):
@@ -154,7 +216,7 @@ class Rocket(Character):
         
     def update(self):
         self.x+=2
-        if self.x > 800:
+        if self.x > game.w:
             self.x = 0
         
     # def display(self):
@@ -180,22 +242,25 @@ class Destination(Character):
     
         
 class Game():
-    def __init__(self,w,h):
+    def __init__(self,w,h): #s_x, e_x
         self.w=w
         self.h=h
+        # self.start_x = s_x
+        # self.end_x = e_x
         self.pause=False
         self.alien=Alien(self.w//4,self.h-20,20,"alien2.png",40,40)
         self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
         self.y=0
+        self.y1=0
         self.gamestate="play"
         self.framerate=0
         self.time=0
         # self.dest=Destination(self.w//2,5,30,None,None,None)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
+        self.bg2=loadImage(path+"/images/spaceBG.png")
         self.asteroids=[]
-        for i in range(6):
-            
+        for i in range(1):
             self.asteroids.append(Asteroid(i*100 + i*100,self.h-100,50,"asteroid.png",50,50))
             
         self.rockets=[]
@@ -206,17 +271,22 @@ class Game():
     def display(self):
         self.framerate+=2
         y=self.y % self.h
-        # print(self.w, self.h, y)
+        # print(self.y, self.h, y)
+        print(self.y)
+        
+        y1=self.y1%self.h
         
         image (self.bg, 0,0,self.w,self.h-y,              0,y,self.w,self.h) 
         image (self.bg, 0,self.h-y,self.w,y,    0,0,self.w,y)
         
-        print (self.h-y)
+        image (self.bg2, self.w//2,0,self.w,self.h-y1,              0,y1,self.w,self.h) 
+        image (self.bg2, self.w//2,self.h-y1,self.w,y1,    0,0,self.w,y1)
+        # print (self.h-y)
        
 
         
         # image (self.bg,0,0,self.w,self.h)
-        line(400,0,400,800)
+        line(self.w//2,0,self.w//2,800)
         
         for x in self.asteroids:
             x.display()
@@ -252,7 +322,7 @@ class Game():
             x.update()
             
         
-game=Game(800,800)
+game=Game(1200,800)
 
 def setup():
    size(game.w,game.h)
