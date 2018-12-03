@@ -2,6 +2,8 @@ import os
 
 path=os.getcwd()
 
+# change game class to run single game in specified coordinates on screen
+
 class Character():
     def __init__(self,x,y,r,img,w,h):
         self.x=x
