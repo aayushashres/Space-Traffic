@@ -161,15 +161,17 @@ class Alien2(Character):
     
     
 class Asteroid(Character):
-     def __init__(self,x,y,r,img,w,h):
+     def __init__(self,x, x1, x2, y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
+        self.x1=x1
+        self.x2=x2
     
         
         
      def update(self):
          self.x+=2
-         if self.x > game.w//2 - self.r*2:
-             self.x = 0
+         if self.x > self.x2:
+             self.x = self.x1
          for x in game.asteroids1:
              
              #moves asteroids across screen (vertically, when the alien moves forward)
@@ -250,11 +252,11 @@ class Game():
         self.bg2=loadImage(path+"/images/spaceBG.png")
         self.asteroids1=[]
         for i in range(1):
-            self.asteroids1.append(Asteroid(i*100 + i*100,self.h-100,50,"asteroid.png",50,50))
+            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-100,50,"asteroid.png",50,50))
         self.asteroids2=[]    
         
         for i in range(1):
-            self.asteroids2.append((Asteroid(self.w//2+(i*100 + i*100),self.h-100,50,"asteroid.png",50,50)))
+            self.asteroids2.append((Asteroid(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-100,50,"asteroid.png",50,50)))
             
         self.rockets=[]
         for i in range(4):
