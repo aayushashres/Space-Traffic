@@ -14,13 +14,14 @@ class Character():
         self.dy=0
     
     def display(self):
+        print("xyz")
         
         
         # stroke(255,0,0)
         # fill(255)
         # ellipse(self.x,self.y,self.r*2,self.r*2)
-        self.update()
-        image(self.img,self.x,self.y-game.y1,self.w,self.h)
+        # self.update()
+        # image(self.img,self.x,self.y-game.y1,self.w,self.h)
         
         
     def update(self):
@@ -85,9 +86,9 @@ class Alien(Character):
         # if self.y+self.r>game.h:
         #     self.y=game.h-self.r
         if self.y <= game.h // 2:
-            game.y += self.dy
+            game.y0 += self.dy
         if self.y+self.r>=game.h:
-            self.y=game.h - (self.r)
+            self.y=game.h - (self.r*2)
         
 
          #COLLISION detection   
@@ -101,6 +102,11 @@ class Alien(Character):
     def distance(self,target):
         
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+    def display(self):
+        self.update()
+        image(self.img,self.x,self.y-game.y0,self.w,self.h)
+        
     
     
 class Alien2(Character):
@@ -141,7 +147,7 @@ class Alien2(Character):
         if self.y <= game.h // 2:
             game.y1 += self.dy
         if self.y+self.r>=game.h:
-            self.y=game.h-self.r
+            self.y=game.h-(self.r*2)
             
         print(self.y)
         
@@ -158,6 +164,10 @@ class Alien2(Character):
     def distance(self,target):
         
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+    def display(self):
+        self.update()
+        image(self.img,self.x,self.y-game.y1,self.w,self.h)
     
     
 class Asteroid(Character):
@@ -241,7 +251,7 @@ class Game():
         self.pause=False
         self.alien=Alien(self.w//4,self.h-20,20,"alien2.png",40,40)
         self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
-        self.y=0
+        self.y0=0
         self.y1=0
         self.gamestate="play"
         self.framerate=0
@@ -265,14 +275,14 @@ class Game():
         
     def display(self):
         self.framerate+=2
-        y=self.y % self.h
+        y0=self.y0 % self.h
         # print(self.y, self.h, y)
         # print(self.y)
         
         y1=self.y1%self.h
         
-        image (self.bg, 0,0,self.w,self.h-y,              0,y,self.w,self.h) 
-        image (self.bg, 0,self.h-y,self.w,y,    0,0,self.w,y)
+        image (self.bg, 0,0,self.w,self.h-y0,              0,y0,self.w,self.h) 
+        image (self.bg, 0,self.h-y0,self.w,y0,    0,0,self.w,y0)
         
         image (self.bg2, self.w//2,0,self.w,self.h-y1,              0,y1,self.w,self.h) 
         image (self.bg2, self.w//2,self.h-y1,self.w,y1,    0,0,self.w,y1)
