@@ -155,7 +155,8 @@ class Alien2(Character):
             if self.y+self.r>=game.h:
                 self.y=game.h-(self.r*2)
                 
-            #print(self.y)
+            print("Y of alien2:" ,self.y)
+            print ("game y2: ",game.y1)
             
         
             
@@ -322,18 +323,61 @@ class Rocket2(Character):
         image(self.img,self.x,self.y)
         
         
-class Destination(Character):
+class Destination1(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h) 
+        self.dx=0
+        self.dy=0
+        self.y1=self.y
         
     def update(self):
         self.dx=0
         self.dy=0
         
+        if game.alien.dy<0 and game.alien.y<=game.h//2:
+            self.dy=(game.alien.dy)*-1
+            self.y+=self.dy
+        else:
+            self.dy=game.alien.dy 
+            if self.y>=self.y1 : #WORK
+                self.y-=self.dy 
+        
     def display(self):
-        stroke(255)
-        fill(0,0,255)
-        rect(self.x,self.y,50,50)
+        # stroke(255)
+        # fill(0,0,255)
+        # rect(self.x,self.y,50,50)
+        
+        image(self.img,self.x,self.y)
+        # print("planet y: ", self.y)
+        
+        
+class Destination2(Character):
+    def __init__(self,x,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h) 
+        self.dx=0
+        self.dy=0
+        self.y1=self.y # y1 to maintain initial position of object 
+        
+        
+    def update(self):
+        self.dx=0
+        self.dy=0
+        
+        if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+            self.dy=(game.alien2.dy)*-1
+            self.y+=self.dy
+        else:
+            self.dy=game.alien2.dy 
+            if self.y>=self.y1 : #WORK
+                self.y-=self.dy 
+        
+    def display(self):
+        # stroke(255)
+        # fill(0,0,255)
+        # ellipse(self.x,self.y,self.r*2,self.r*2)
+        
+        image(self.img,self.x,self.y)
+        print("planet y: ", self.y)
         
     
     
@@ -353,7 +397,9 @@ class Game():
         self.gamestate2="play"
         self.framerate=0
         self.time=0
-        # self.dest=Destination(self.w//2,5,30,None,None,None)
+        
+        self.dest1=Destination1(self.w//4,5,30,"planet.png",60,60)
+        self.dest2=Destination2(self.w//2,-100,30,"planet.png",60,60)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
@@ -373,6 +419,8 @@ class Game():
         self.rockets2=[]
         for i in range(1):
             self.rockets2.append(Rocket2(self.w//2+(i*100 + i*100),self.w//2,self.w,self.h-500,30,"spaceship.png",96,80))
+            
+        
             
             
         
@@ -410,6 +458,10 @@ class Game():
             
         for r in self.rockets2:
             r.display()
+        
+        self.dest1.display()
+        self.dest2.display()
+        
             
             
         
@@ -425,6 +477,15 @@ class Game():
         self.time=(self.framerate//60)
         fill(255)
         rect(50,50,max(0,100-(self.time*1)),20)
+        
+        
+        #time for player 2
+        text("TIME",self.w//2+50,40)
+        fill(0)
+        rect((self.w//2)+50,50,100,20)
+        self.time=(self.framerate//60)
+        fill(255)
+        rect(self.w//2+50, 50, max((0),(100-(self.time*1))),  20)
         
     
         
@@ -444,6 +505,9 @@ class Game():
             
         for r in self.rockets2:
             r.update()
+            
+        self.dest1.update()
+        self.dest2.update()
             
             
         
