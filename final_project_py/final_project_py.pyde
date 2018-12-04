@@ -171,7 +171,7 @@ class Alien2(Character):
     
     
 class Asteroid(Character):
-     def __init__(self,x, x1, x2, y,r,img,w,h):
+     def __init__(self,x, x1, x2, y,r,img,w,h): #x1, x2 are start and end of asteroid
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
@@ -195,35 +195,94 @@ class Asteroid(Character):
             
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
-                
-    
-         
-         
-        
      def display(self):
     
-        stroke(255)
-        fill(255)
-        rect(self.x,self.y,30,10)
-        fill(0,255,0)
+        # stroke(255)
+        # fill(255)
+        # rect(self.x,self.y,30,10)
+        # fill(0,255,0)
         # rect(self.x+game.w//2,self.y,30,10)
         
         image (self.img,self.x,self.y)
         # image (self.img, self.x+game.w//2, self.y)
+        
+        
+        
+class Asteroid2(Character):
+    def __init__(self,x, x1, x2, y,r,img,w,h): #x1, x2 are start and end points of asteroid
+        Character.__init__(self,x,y,r,img,w,h)
+        self.x1=x1
+        self.x2=x2
+        
+    def update(self):
+         self.x+=2
+         if self.x > self.x2:
+             self.x = self.x1
+         for x in game.asteroids1:
+             
+             #moves asteroids across screen (vertically, when the alien moves forward)
+            if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+                self.dy=(game.alien2.dy)*-1
+                self.y+=self.dy
+            else:
+                self.dy=game.alien2.dy 
+                if self.y>=650 : #WORK
+                    self.y-=self.dy  
+            
+         # print (self.y, self.dy, game.alien.y, game.h//2)
+            
+    def display(self):
+    
+        # stroke(255)
+        # fill(255)
+        # rect(self.x,self.y,30,10)
+        # fill(0,255,0)
+        # rect(self.x+game.w//2,self.y,30,10)
+        
+        image (self.img,self.x,self.y)
+        # image (self.img, self.x+game.w//2, self.y)
+    
+    
          
 class Rocket(Character):
-    def __init__(self,x,y,r,img,w,h):
+    def __init__(self,x,x1,x2,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
+        self.x1=x1
+        self.x2=x2
         
     def update(self):
         self.x+=2
-        if self.x > game.w:
-            self.x = 0
+        if self.x > self.x2:
+            self.x = self.x1
         
-    # def display(self):
-    #     stroke(255)
-    #     fill(255,0,0)
-    #     rect(self.x,self.y,30,10)
+    def display(self):
+        
+        stroke(255)
+        # fill(255,0,0)
+        # rect(self.x,self.y,30,10)
+        
+        image(self.img,self.x,self.y)
+        
+class Rocket2(Character):
+    def __init__(self,x,x1,x2,y,r,img,w,h):
+        Character.__init__(self,x,y,r,img,w,h)
+        self.x1=x1
+        self.x2=x2
+        
+    def update(self):
+        self.x+=2
+        if self.x > self.x2:
+            self.x = self.x1
+            
+    #WORK ON MVMT
+        
+    def display(self):
+        
+        stroke(255)
+        # fill(255,0,0)
+        # rect(self.x,self.y,30,10)
+        
+        image(self.img,self.x,self.y)
         
         
 class Destination(Character):
@@ -260,17 +319,25 @@ class Game():
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
+        
         self.asteroids1=[]
         for i in range(1):
-            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-100,50,"asteroid.png",50,50))
-        self.asteroids2=[]    
+            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-150,50,"asteroid.png",50,50))
         
+        self.asteroids2=[]    
         for i in range(1):
-            self.asteroids2.append((Asteroid(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-100,50,"asteroid.png",50,50)))
+            self.asteroids2.append((Asteroid2(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-150,50,"asteroid.png",50,50)))
             
         self.rockets=[]
-        for i in range(4):
-            self.rockets.append(Rocket(i*100 + i*100,self.h-500,30,"spaceship.png",96,80))
+        for i in range(2):
+            self.rockets.append(Rocket(i*100 + i*100,0,self.w//2-80,self.h-500,30,"spaceship.png",96,80))
+            
+        self.rockets2=[]
+        for i in range(1):
+            self.rockets2.append(Rocket2(self.w//2+(i*100 + i*100),self.w//2,self.w,self.h-500,30,"spaceship.png",96,80))
+            
+            
+        
             
         
     def display(self):
@@ -303,10 +370,15 @@ class Game():
         for r in self.rockets:
             r.display()
             
+        for r in self.rockets2:
+            r.display()
+            
+            
         
         self.alien.display()
         self.alien2.display()
         
+        #TIMER BAR
         stroke(255)
         fill(255)
         text("TIME",50,40)
@@ -331,6 +403,10 @@ class Game():
             
         for x in self.rockets:
             x.update()
+            
+        for r in self.rockets2:
+            r.update()
+            
             
         
 game=Game(1200,800)
