@@ -58,46 +58,48 @@ class Alien(Character):
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
 
     def update(self):
-        # Character.update(self)    
+        # Character.update(self)   
+         
+        if game.gamestate1=="play":
         
-        if self.keyHandler[LEFT]:
-            self.dx = -10
-        elif self.keyHandler[RIGHT]:
-            self.dx = 10
-        elif self.keyHandler[UP]:
-            self.dx = 0
-            self.dy = -10
-        elif self.keyHandler[DOWN]:
-            self.dx=0
-            self.dy = 10
-        else:
-            self.dx = self.dy = 0
+            if self.keyHandler[LEFT]:
+                self.dx = -10
+            elif self.keyHandler[RIGHT]:
+                self.dx = 10
+            elif self.keyHandler[UP]:
+                self.dx = 0
+                self.dy = -10
+            elif self.keyHandler[DOWN]:
+                self.dx=0
+                self.dy = 10
+            else:
+                self.dx = self.dy = 0
+                
+            self.x+=self.dx
+            self.y+=self.dy
             
-        self.x+=self.dx
-        self.y+=self.dy
+            if self.x-self.r<0:
+                self.x=self.r
+                
+            if self.x+self.r>=game.w//2:
+                self.x=(game.w//2)-self.r
+                
+    
+            # if self.y+self.r>game.h:
+            #     self.y=game.h-self.r
+            if self.y <= game.h // 2:
+                game.y0 += self.dy
+            if self.y+self.r>=game.h:
+                self.y=game.h - (self.r*2)
+            
+    
+            #COLLISION detection   
         
-        if self.x-self.r<0:
-            self.x=self.r
-            
-        if self.x+self.r>=game.w//2:
-            self.x=(game.w//2)-self.r
-            
-   
-        # if self.y+self.r>game.h:
-        #     self.y=game.h-self.r
-        if self.y <= game.h // 2:
-            game.y0 += self.dy
-        if self.y+self.r>=game.h:
-            self.y=game.h - (self.r*2)
-        
-
-         #COLLISION detection   
-       
-        for x in game.asteroids1:
-            # print(self.distance(x))
-            if self.distance(x) <= self.r+ x.r :
-                game.gamestate="over"
-                 
+            for x in game.asteroids1:
+                # print(self.distance(x))
+                if self.distance(x) <= self.r+ x.r :
+                    game.gamestate1="over"
+                    
         
     def distance(self,target):
         
@@ -105,7 +107,11 @@ class Alien(Character):
     
     def display(self):
         self.update()
+        # stroke (255)
+        # fill(0)
+        # ellipse(self.x+self.r,self.y+self.r,self.r*2,self.r*2)
         image(self.img,self.x,self.y-game.y0,self.w,self.h)
+        
         
     
     
@@ -115,53 +121,53 @@ class Alien2(Character):
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
 
     def update(self):
+        if game.gamestate2=="play":
+            if self.keyHandler[LEFT]:
+                self.dx = -10
+            elif self.keyHandler[RIGHT]:
+                self.dx = 10
+            elif self.keyHandler[UP]:
+                self.dx = 0
+                self.dy = -10
+            elif self.keyHandler[DOWN]:
+                self.dx=0
+                self.dy = 10
+            else:
+                self.dx = self.dy = 0
+                
+            self.x+=self.dx
+            self.y+=self.dy
         
-        if self.keyHandler[LEFT]:
-            self.dx = -10
-        elif self.keyHandler[RIGHT]:
-            self.dx = 10
-        elif self.keyHandler[UP]:
-            self.dx = 0
-            self.dy = -10
-        elif self.keyHandler[DOWN]:
-            self.dx=0
-            self.dy = 10
-        else:
-            self.dx = self.dy = 0
+                
+            if self.x+self.r<=game.w//2:
+                self.x=(game.w//2)+self.r
+                
+            if self.x+self.r>game.w:
+                self.x=game.w-self.r
+                
+            # if self.y>=game.h//2:
+            #     game.y=self.dy
+        
             
-        self.x+=self.dx
-        self.y+=self.dy
-    
             
-        if self.x+self.r<=game.w//2:
-            self.x=(game.w//2)+self.r
+            if self.y <= game.h // 2:
+                game.y1 += self.dy
+            if self.y+self.r>=game.h:
+                self.y=game.h-(self.r*2)
+                
+            #print(self.y)
             
-        if self.x+self.r>game.w:
-            self.x=game.w-self.r
+        
             
-        # if self.y>=game.h//2:
-        #     game.y=self.dy
-    
+            #COLLISION detection   
         
+            for x in game.asteroids2:
+                # print(self.distance(x))
+                if self.distance(x) <= self.r+ x.r :
+                    game.gamestate2="over"
+                    
         
-        if self.y <= game.h // 2:
-            game.y1 += self.dy
-        if self.y+self.r>=game.h:
-            self.y=game.h-(self.r*2)
-            
-        print(self.y)
-        
-       
-        
-         #COLLISION detection   
-       
-        for x in game.asteroids2:
-            # print(self.distance(x))
-            if self.distance(x) <= self.r+ x.r :
-                game.gamestate="over"
-                 
-        
-    def distance(self,target):
+    def distance(self,target): #dist between asteroid and player
         
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
     
@@ -196,6 +202,10 @@ class Asteroid(Character):
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
      def display(self):
+    
+        stroke (255)
+        fill(0)
+        ellipse(self.x+self.r,self.y+self.r,self.r*2,self.r*2)
     
         # stroke(255)
         # fill(255)
@@ -232,6 +242,10 @@ class Asteroid2(Character):
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
     def display(self):
+        
+        stroke (255)
+        fill(0)
+        ellipse(self.x+self.r,self.y+self.r,self.r*2,self.r*2)
     
         # stroke(255)
         # fill(255)
@@ -249,12 +263,24 @@ class Rocket(Character):
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
+        self.y1=self.y #y1 to check initial position)
         
     def update(self):
         self.x+=2
         if self.x > self.x2:
             self.x = self.x1
-        
+            
+            
+             #moves rockets across screen (vertically, when the alien moves forward)
+        for x in game.rockets:
+            if game.alien.dy<0 and game.alien.y<=game.h//2:
+                self.dy=(game.alien.dy)*-1
+                self.y+=self.dy
+            else:
+                self.dy=game.alien.dy 
+                if self.y>=self.y1 : 
+                    self.y-=self.dy  
+            
     def display(self):
         
         stroke(255)
@@ -268,11 +294,22 @@ class Rocket2(Character):
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
+        self.y1=self.y
         
     def update(self):
         self.x+=2
         if self.x > self.x2:
             self.x = self.x1
+            
+            #moves rockets across screen (vertically, when the alien moves forward)
+        for x in game.rockets2:
+            if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+                self.dy=(game.alien2.dy)*-1
+                self.y+=self.dy
+            else:
+                self.dy=game.alien2.dy 
+                if self.y>=self.y1 : #WORK
+                    self.y-=self.dy  
             
     #WORK ON MVMT
         
@@ -312,7 +349,8 @@ class Game():
         self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
         self.y0=0
         self.y1=0
-        self.gamestate="play"
+        self.gamestate1="play"
+        self.gamestate2="play"
         self.framerate=0
         self.time=0
         # self.dest=Destination(self.w//2,5,30,None,None,None)
@@ -322,11 +360,11 @@ class Game():
         
         self.asteroids1=[]
         for i in range(1):
-            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-150,50,"asteroid.png",50,50))
+            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-150,25,"asteroid.png",50,50))
         
         self.asteroids2=[]    
         for i in range(1):
-            self.asteroids2.append((Asteroid2(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-150,50,"asteroid.png",50,50)))
+            self.asteroids2.append((Asteroid2(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-150,25,"asteroid.png",50,50)))
             
         self.rockets=[]
         for i in range(2):
@@ -424,12 +462,16 @@ def draw():
         
         game.display()
         
-        if game.gamestate=="play":
-            game.display()
-        elif game.gamestate=="over":
+        if game.gamestate1=="over":
+            fill(255,0,0)
+            textSize(50)
+            text("Gameover",game.w//4,game.h//2)
+        if game.gamestate2=="over":
             fill(255,0,0)
             textSize(50)
             text("Gameover",game.w//2,game.h//2)
+        
+        
 
 def keyPressed():
     if keyCode == LEFT:
