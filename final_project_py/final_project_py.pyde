@@ -2,6 +2,8 @@ import os
 
 path=os.getcwd()
 
+##endgame var-true false, ani tyo endgame chai game.y euta certain point katechi true. tespachi update ma +=dy, else ma aile ko mvmt
+
 class Character():
     def __init__(self,x,y,r,img,w,h):
         self.x=x
@@ -150,13 +152,14 @@ class Alien2(Character):
         
             
             
-            if self.y <= game.h // 2:
+            if self.y <= game.h // 2 and self.y > -620:
                 game.y1 += self.dy
+                
             if self.y+self.r>=game.h:
                 self.y=game.h-(self.r*2)
                 
-            print("Y of alien2:" ,self.y)
-            print ("game y2: ",game.y1)
+            # print("Y of alien2:" ,self.y)
+            # print ("game y2: ",game.y1)
             
         
             
@@ -178,10 +181,11 @@ class Alien2(Character):
     
     
 class Asteroid(Character):
-     def __init__(self,x, x1, x2, y,r,img,w,h): #x1, x2 are start and end of asteroid
+     def __init__(self,x, x1, x2, dx, y,r,img,w,h): #x1, x2 are start and end of asteroid
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
+        self.dx=dx
     
         
         
@@ -189,21 +193,21 @@ class Asteroid(Character):
          self.x+=2
          if self.x > self.x2:
              self.x = self.x1
-         for x in game.asteroids1:
+         # for x in game.asteroids1:
              
-             #moves asteroids across screen (vertically, when the alien moves forward)
-            if game.alien.dy<0 and game.alien.y<=game.h//2:
-                self.dy=(game.alien.dy)*-1
-                self.y+=self.dy
-            else:
-                self.dy=game.alien.dy 
-                if self.y>=650 : #WORK
-                    self.y-=self.dy  
+         #     #moves asteroids across screen (vertically, when the alien moves forward)
+         #    if game.alien.dy<0 and game.alien.y<=game.h//2:
+         #        self.dy=(game.alien.dy)*-1
+         #        self.y+=self.dy
+         #    else:
+         #        self.dy=game.alien.dy 
+         #        if self.y>=650 : #WORK
+         #            self.y-=self.dy  
             
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
      def display(self):
-    
+        print("reached pt1")
         stroke (255)
         fill(0)
         ellipse(self.x+self.r,self.y+self.r,self.r*2,self.r*2)
@@ -213,32 +217,34 @@ class Asteroid(Character):
         # rect(self.x,self.y,30,10)
         # fill(0,255,0)
         # rect(self.x+game.w//2,self.y,30,10)
-        
-        image (self.img,self.x,self.y)
+        print("reached part2")
+        image (self.img,self.x,self.y-game.y0) #errorhere
+        print("reached part3")
         # image (self.img, self.x+game.w//2, self.y)
         
         
         
 class Asteroid2(Character):
-    def __init__(self,x, x1, x2, y,r,img,w,h): #x1, x2 are start and end points of asteroid
+    def __init__(self,x, x1, x2, dx, y,r,img,w,h): #x1, x2 are start and end points of asteroid
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
+        self.dx=dx
         
     def update(self):
-         self.x+=2
+         self.x+=self.dx
          if self.x > self.x2:
              self.x = self.x1
-         for x in game.asteroids1:
+         # for x in game.asteroids1:
              
-             #moves asteroids across screen (vertically, when the alien moves forward)
-            if game.alien2.dy<0 and game.alien2.y<=game.h//2:
-                self.dy=(game.alien2.dy)*-1
-                self.y+=self.dy
-            else:
-                self.dy=game.alien2.dy 
-                if self.y>=650 : #WORK
-                    self.y-=self.dy  
+         #     #moves asteroids across screen (vertically, when the alien moves forward)
+         #    if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+         #        self.dy=(game.alien2.dy)*-1
+         #        self.y+=self.dy
+         #    else:
+         #        self.dy=game.alien2.dy 
+         #        if self.y>=650 : #WORK
+         #            self.y-=self.dy  
             
          # print (self.y, self.dy, game.alien.y, game.h//2)
             
@@ -254,7 +260,7 @@ class Asteroid2(Character):
         # fill(0,255,0)
         # rect(self.x+game.w//2,self.y,30,10)
         
-        image (self.img,self.x,self.y)
+        image (self.img,self.x,self.y-game.y1)
         # image (self.img, self.x+game.w//2, self.y)
     
     
@@ -273,14 +279,14 @@ class Rocket(Character):
             
             
              #moves rockets across screen (vertically, when the alien moves forward)
-        for x in game.rockets:
-            if game.alien.dy<0 and game.alien.y<=game.h//2:
-                self.dy=(game.alien.dy)*-1
-                self.y+=self.dy
-            else:
-                self.dy=game.alien.dy 
-                if self.y>=self.y1 : 
-                    self.y-=self.dy  
+        # for x in game.rockets:
+        #     if game.alien.dy<0 and game.alien.y<=game.h//2:
+        #         self.dy=(game.alien.dy)*-1
+        #         self.y+=self.dy
+        #     else:
+        #         self.dy=game.alien.dy 
+        #         if self.y>=self.y1 : 
+        #             self.y-=self.dy  
             
     def display(self):
         
@@ -288,7 +294,7 @@ class Rocket(Character):
         # fill(255,0,0)
         # rect(self.x,self.y,30,10)
         
-        image(self.img,self.x,self.y)
+        image(self.img,self.x,self.y-game.y0)
         
 class Rocket2(Character):
     def __init__(self,x,x1,x2,y,r,img,w,h):
@@ -302,15 +308,15 @@ class Rocket2(Character):
         if self.x > self.x2:
             self.x = self.x1
             
-            #moves rockets across screen (vertically, when the alien moves forward)
-        for x in game.rockets2:
-            if game.alien2.dy<0 and game.alien2.y<=game.h//2:
-                self.dy=(game.alien2.dy)*-1
-                self.y+=self.dy
-            else:
-                self.dy=game.alien2.dy 
-                if self.y>=self.y1 : #WORK
-                    self.y-=self.dy  
+        #     #moves rockets across screen (vertically, when the alien moves forward)
+        # for x in game.rockets2:
+        #     if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+        #         self.dy=(game.alien2.dy)*-1
+        #         self.y+=self.dy
+        #     else:
+        #         self.dy=game.alien2.dy 
+        #         if self.y>=self.y1 : #WORK
+        #             self.y-=self.dy  
             
     #WORK ON MVMT
         
@@ -320,7 +326,7 @@ class Rocket2(Character):
         # fill(255,0,0)
         # rect(self.x,self.y,30,10)
         
-        image(self.img,self.x,self.y)
+        image(self.img,self.x,self.y-game.y1)
         
         
 class Destination1(Character):
@@ -331,23 +337,24 @@ class Destination1(Character):
         self.y1=self.y
         
     def update(self):
-        self.dx=0
-        self.dy=0
+        return
+        # self.dx=0
+        # self.dy=0
         
-        if game.alien.dy<0 and game.alien.y<=game.h//2:
-            self.dy=(game.alien.dy)*-1
-            self.y+=self.dy
-        else:
-            self.dy=game.alien.dy 
-            if self.y>=self.y1 : #WORK
-                self.y-=self.dy 
+        # if game.alien.dy<0 and game.alien.y<=game.h//2:
+        #     self.dy=(game.alien.dy)*-1
+        #     self.y+=self.dy
+        # else:
+        #     self.dy=game.alien.dy 
+        #     if self.y>=self.y1 : #WORK
+        #         self.y-=self.dy 
         
     def display(self):
         # stroke(255)
         # fill(0,0,255)
         # rect(self.x,self.y,50,50)
         
-        image(self.img,self.x,self.y)
+        image(self.img,self.x,self.y-game.y1)
         # print("planet y: ", self.y)
         
         
@@ -360,30 +367,31 @@ class Destination2(Character):
         
         
     def update(self):
-        self.dx=0
-        self.dy=0
+        return
+    #     self.dx=0
+    #     self.dy=0
         
-        if game.alien2.dy<0 and game.alien2.y<=game.h//2:
-            self.dy=(game.alien2.dy)*-1
-            self.y+=self.dy
-        else:
-            self.dy=game.alien2.dy 
-            if self.y>=self.y1 : #WORK
-                self.y-=self.dy 
+    #     if game.alien2.dy<0 and game.alien2.y<=game.h//2:
+    #         self.dy=(game.alien2.dy)*-1
+    #         self.y+=self.dy
+    #     else:
+    #         self.dy=game.alien2.dy 
+    #         if self.y>=self.y1 : #WORK
+    #             self.y-=self.dy 
         
     def display(self):
         # stroke(255)
         # fill(0,0,255)
         # ellipse(self.x,self.y,self.r*2,self.r*2)
-        
-        image(self.img,self.x,self.y)
-        print("planet y: ", self.y)
+         #CHANGES MADE HERE:
+        image(self.img,self.x,self.y-game.y1)
+        # print("planet y: ", self.y)
         
     
     
         
 class Game():
-    def __init__(self,w,h): #s_x, e_x
+    def __init__(self,w,h,level,endgame): #s_x, e_x
         self.w=w
         self.h=h
         # self.start_x = s_x
@@ -397,28 +405,59 @@ class Game():
         self.gamestate2="play"
         self.framerate=0
         self.time=0
+        self.endgame=endgame
         
         self.dest1=Destination1(self.w//4,5,30,"planet.png",60,60)
-        self.dest2=Destination2(self.w//2,-100,30,"planet.png",60,60)
+        self.dest2=Destination2(self.w//2,-1000,30,"planet.png",60,60)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
         
+        self.level=level
         self.asteroids1=[]
-        for i in range(1):
-            self.asteroids1.append(Asteroid(i*100 + i*100,0, self.w//2 -(50*2),self.h-150,25,"asteroid.png",50,50))
-        
-        self.asteroids2=[]    
-        for i in range(1):
-            self.asteroids2.append((Asteroid2(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,self.h-150,25,"asteroid.png",50,50)))
-            
+        self.asteroids2=[]
         self.rockets=[]
-        for i in range(2):
-            self.rockets.append(Rocket(i*100 + i*100,0,self.w//2-80,self.h-500,30,"spaceship.png",96,80))
-            
         self.rockets2=[]
-        for i in range(1):
-            self.rockets2.append(Rocket2(self.w//2+(i*100 + i*100),self.w//2,self.w,self.h-500,30,"spaceship.png",96,80))
+        
+        #self.loadStage()
+        
+        # self.asteroids1=[]
+        # for i in range(4):
+        #     self.asteroids1.append(Asteroid(i*150 + i*100,0, self.w//2 -(50*2),self.h-150,25,"asteroid.png",50,50))
+        
+        # self.asteroids2=[]    
+        # for i in range(1):
+        #     self.asteroids2.append((Asteroid2(self.w//2+(i*100 + i*100),self.w//2+50*2, self.w -50*2,2,self.h-150,25,"asteroid.png",50,50)))
+            
+        # self.rockets=[]
+        # for i in range(2):
+        #     self.rockets.append(Rocket(i*100 + i*100,0,self.w//2-80,self.h-500,30,"spaceship.png",96,80))
+            
+        # self.rockets2=[]
+        # for i in range(1):
+        #     self.rockets2.append(Rocket2(self.w//2+(i*100 + i*100),self.w//2,self.w,self.h-500,30,"spaceship.png",96,80))
+        
+        
+        
+    def loadStage(self):
+        self.asteroids1 =[]
+        
+        print("Now loading stage")
+        file=open(path+"/level"+str(self.level)+".csv","r")
+        print(file)
+        for l in file:
+            l=l.strip().split(",")
+            print(l)
+            if l[0] == "AsteroidP1":
+                cnt=0
+                for i in range(2):
+                    self.asteroids1.append(Asteroid(cnt*int(l[1])+cnt*100,int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"asteroid.png",int(l[8]),int(l[9]))) #l[7] has some garbage????
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.asteroids1.append(Asteroid(625+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"asteroid.png",int(l[8]),int(l[9])))
+                    cnt+=1
+        print(self.asteroids1)
             
         
             
@@ -429,6 +468,8 @@ class Game():
     def display(self):
         self.framerate+=2
         y0=self.y0 % self.h
+        
+        
         # print(self.y, self.h, y)
         # print(self.y)
         
@@ -445,8 +486,8 @@ class Game():
         
         # image (self.bg,0,0,self.w,self.h)
         line(self.w//2,0,self.w//2,800)
-        
         for x in self.asteroids1:
+            #print("Displaying asteriods now")
             x.display()
         # self.dest.display()
         
@@ -511,10 +552,11 @@ class Game():
             
             
         
-game=Game(1200,800)
+game=Game(1200,800,1,-2000)
 
 def setup():
    size(game.w,game.h)
+   game.loadStage()
    
 def draw():
     
