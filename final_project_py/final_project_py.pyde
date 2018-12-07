@@ -21,7 +21,7 @@ class Alien(Character):
         self.which_y = which_y
  
     def update(self):
-        if game.gamestate = "play"
+        if game.gamestate1 == "play":
             if self.keyHandler[LEFT]:
                 self.dx = -10
             elif self.keyHandler[RIGHT]:
