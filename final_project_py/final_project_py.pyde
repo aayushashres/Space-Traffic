@@ -269,7 +269,7 @@ class Coins(Character):
         
     
 
-# level=0
+level=0
 
 class Game():
     def __init__(self,w,h,level,endgame): #s_x, e_x
@@ -393,7 +393,7 @@ class Game():
             self.y0 = 0
                 
     def display(self):
-        self.framerate+=2
+        self.framerate+=1
         y0=self.y0 % self.h
         y1=self.y1%self.h
         
@@ -440,7 +440,7 @@ class Game():
         rect(50,50,100,20)
         self.time=(self.framerate//60)
         fill(255)
-        rect(50,50,max(0,100-(self.time*1)),20)
+        rect(50,50,max(0,100-(self.time)),20)
         
         
         #time bar for game 2
@@ -449,7 +449,7 @@ class Game():
         rect((self.w//2)+50,50,100,20)
         self.time=(self.framerate//60)
         fill(255)
-        rect(self.w//2+50, 50, max((0),(100-(self.time*1))),  20)
+        rect(self.w//2+50, 50, max((0),(100-(self.time))),  20)
         
     def update(self):
         self.alien.update()
@@ -476,11 +476,11 @@ class Game():
             
             
         
-game=Game(1200,800,1,-2000)
+game=Game(1200,800,level,-2000)
 
 def setup():
    size(game.w,game.h)
-   game.loadStage()
+   # game.loadStage()
    
    
    
@@ -599,10 +599,28 @@ def keyReleased():
 
 def mouseClicked():
     global level #global var accessed in order to change the level
-    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3 < mouseY < game.h//3 + 50:
+    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3 < mouseY < game.h//3 + 50: #for level 1
         game.gamestate1="play" 
         game.gamestate2="play"
         level=1 #SETTING LEVEL
+        game.level = level
+        game.loadStage()
+        #set max, endpoint,time
+        
+    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+100 < mouseY < game.h//3 + 150: #for level 2
+        game.gamestate1="play" 
+        game.gamestate2="play"
+        level=2 #SETTING LEVEL
+        game.level = level
+        game.loadStage()
+    
+    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 350: 
+        game.gamestate1="play" 
+        game.gamestate2="play"
+        level=3 #SETTING LEVEL
+        game.level = level
+        game.loadStage()
+        
         
     if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+300 < mouseY < game.h//3 + 350 and   game.gamestate1=="menu" and game.gamestate2=="menu":
         game.gamestate1="instruction"
