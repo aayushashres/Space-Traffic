@@ -270,11 +270,18 @@ class Coins(Character):
     
 
 level=0
+maxy=0
+maxmid=0
+time=0
 
 class Game():
-    def __init__(self,w,h,level,endgame): #s_x, e_x
+    def __init__(self,w,h,level,maxy,maxmid,time): 
         self.w=w
         self.h=h
+        self.level=level
+        self.maxy=maxy  #This will check the upper boundry for the character
+        self.maxmid=maxmid #This is the y position after which alien can move to the uper half of the screen)
+        self.time=time
         # self.start_x = s_x
         # self.end_x = e_x
         self.pause=False
@@ -286,28 +293,30 @@ class Game():
         self.gamestate2="menu"
         self.framerate=0
         self.time=0
-        self.endgame=endgame
+        
         self.TESTLIST = [1,2,3,4,10]
         #initial num of lives is 3 for each player
         self.numlives1=3
         self.numlives2=3
         
-        self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
-        self.dest2=Destination1(self.w//2,-1000,30,"planet.png",60,60,1)
+        
+        # self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
+        # self.dest2=Destination1(self.w//2,-1000,30,"planet.png",60,60,1)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
         self.bgmenu=loadImage(path+"/images/menubg.png")
         self.instr=loadImage(path+"/images/instructions.png")
         
-        self.level=level
+        
         self.asteroids1=[]
         self.asteroids2=[]
         self.rockets=[]
         self.rockets2=[]
         self.fireballs1=[]
         self.fireballs2=[]
-        
+        self.dest1=None
+        self.dest2=None
         
     def loadStage(self):
         print("Now loading stage")
@@ -378,6 +387,14 @@ class Game():
                     self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
                 print (self.fireballs2)
+                
+            if l[0]=="Dest1":
+                self.dest1=Destination1(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
+            if l[0]=="Dest2":
+                self.dest2=Destination1(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
+                
+    
+                
                 
         
                     
@@ -471,12 +488,12 @@ class Game():
         for f in self.fireballs2:
             f.update()
             
-        self.dest1.update()
-        self.dest2.update()
+        # self.dest1.update()
+        # self.dest2.update()
             
             
         
-game=Game(1200,800,level,-2000)
+game=Game(1200,800,level,-2000,-1050,60)
 
 def setup():
    size(game.w,game.h)
@@ -525,7 +542,7 @@ def draw():
             
         elif game.gamestate1=="instruction" and game.gamestate2=="instruction":
                 # print("reached")
-                image(game.bgmenu,0,0)
+                image(game.bgmenu,0,0,1200,800)
                 image(game.instr,game.w//5.5,game.h//5.5,800,400)
                 
                 if game.w//2 < mouseX < game.w//2 + 200 and game.h//3+400 < mouseY < game.h//3 + 450:
@@ -614,7 +631,7 @@ def mouseClicked():
         game.level = level
         game.loadStage()
     
-    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 350: 
+    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 250: 
         game.gamestate1="play" 
         game.gamestate2="play"
         level=3 #SETTING LEVEL
