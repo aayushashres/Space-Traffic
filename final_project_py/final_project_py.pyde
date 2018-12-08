@@ -1,10 +1,6 @@
 import os
 
 path=os.getcwd()
-
-
-##endgame var-true false, ani tyo endgame chai game.y euta certain point katechi true. tespachi update ma +=dy, else ma aile ko mvmt
-
 class Character():
     def __init__(self,x,y,r,img,w,h):
         self.x=x
@@ -18,23 +14,15 @@ class Character():
     
     def display(self):
         print("xyz")
-        
-        
+            
     def update(self):
-        print("xyz")
-        
-        
-    
+        print("xyz")    
 class Alien(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
-
     def update(self):
-        # Character.update(self)   
-         
         if game.gamestate1=="play":
-        
             if self.keyHandler[LEFT]:
                 self.dx = -10
             elif self.keyHandler[RIGHT]:
@@ -56,20 +44,13 @@ class Alien(Character):
             if self.x+self.r>=game.w//2:
                 self.x=(game.w//2)-self.r
                 
-    
-            # if self.y+self.r>game.h:
-            #     self.y=game.h-self.r
             if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
                 game.y0 += self.dy
                 
-            # if self.y <= game.h // 2:
-            #     game.y0 += self.dy
             if self.y+self.r>=game.h:
                 self.y=game.h - (self.r*2)
-            
     
-            #COLLISION detection   
-        
+            # asteroid collision
             for x in game.asteroids1:
                 # print(self.distance(x))
                 if self.distance(x) <= self.r+ x.r :
@@ -78,7 +59,7 @@ class Alien(Character):
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
-                        
+            # fireball collision        
             for x in game.fireballs1:
                  if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
@@ -86,20 +67,53 @@ class Alien(Character):
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
-                
+            # Rocket Part
+            if self.y <= 300 and self.y >= 50: # if the alien is in the segment of the game that contains the rockets 
+                if self.distance(x) <= self.r + x.r and self.keyHandler[UP] == True: #and self.keyHandler[LEFT] == False and self.keyHandler[RIGHT] == False and self.keyHandler[UP] == False and self.keyHandler[DOWN] == False:
+                    self.dy = 0
+                    self.x = x.x
+                    self.y = x.y
+                    self.dx = 0
+                if self.between_rockets(game.rockets) == False:
+                    game.numlives1-=1
+                    self.y=750
+                    game.y0 = 0
+                    print(game.numlives1)
+                    if game.numlives1<=0:
+                        game.gamestate1="over"
         
     def distance(self,target):
-        
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+    
+    # check if the player is currently in the space between two horizontally scrolling rows of rockets
+    # used for death-checking when in the rocket area: if the player is moving from rocket to rocket, that's fine,
+    # but if they end up trying to fly when there's no rocket in front of them, they die
+    # we take a list of rocket objects as parameter so there's no need to re-write the function for the other rocket, just pass it the relevant list
+    def between_rockets(self, rocket_list):
+        closest_in_line = rocket_list[0]
+        # step 1: find the rocket which is vertically in line with self AND has the smallest distance to self
+        for r in rocket_list:
+            if r.y - self.y < 80:
+           # if self.x >= r.x and self.x <= (r.x + r.w):
+                closest_in_line = r
+                if self.x >= closest_in_line.x and self.x <= (closest_in_line.x + closest_in_line.w):
+                    return True 
+                else:
+                    return False
+                
+            
+        # step 2: check distance from self to closest_in_line. 
+        # if it's less than, say, 80 (although rly you should dynamic this out but for now hardcode is fine)
+        # return True
+        # else return False
+        return False 
+    
     
     def display(self):
         self.update()
-        
         image(self.img,self.x,self.y-game.y0,self.w,self.h)
         
-        
-    
-    
 class Alien2(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
@@ -122,32 +136,20 @@ class Alien2(Character):
                 
             self.x+=self.dx
             self.y+=self.dy
-        
-                
+
             if self.x+self.r<=game.w//2:
                 self.x=(game.w//2)+self.r
                 
             if self.x+self.r>game.w:
                 self.x=game.w-self.r
-                
-            # if self.y>=game.h//2:
-            #     game.y=self.dy
-        
-            
-            
+
             if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
                 game.y1 += self.dy
                 
             if self.y+self.r>=game.h:
                 self.y=game.h-(self.r*2)
-                
-            # print("Y of alien2:" ,self.y)
-            # print ("game y2: ",game.y1)
             
-        
-            
-            #COLLISION detection   
-        
+            # asteroid collision   
             for x in game.asteroids2:
                 # print(self.distance(x))
                 if self.distance(x) <= self.r+ x.r :
@@ -156,6 +158,7 @@ class Alien2(Character):
                     print(game.numlives2)
                     if game.numlives2<=0:
                         game.gamestate2="over"
+            # fireball collision
             for x in game.fireballs2: #WORK ON COLLISION FOR FIREBALL
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
@@ -163,8 +166,7 @@ class Alien2(Character):
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
-                    
-        
+    
     def distance(self,target): #dist between asteroid and player
         
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
@@ -180,27 +182,17 @@ class Asteroid(Character):
         self.x1=x1
         self.x2=x2
         self.dx=dx
-        self.which_y = which_y
-    
-        
-        
+        self.which_y = which_y    
      def update(self):
          self.x+=self.dx
          if self.x > self.x2:
              self.x = self.x1
-            
      def display(self):
-        # print("reached pt1")
-        # stroke (255)
-        # fill(0)
-        # ellipse(self.x+self.r,self.y+self.r,self.r*2,self.r*2)
-    
         if self.which_y == 0:
-            image (self.img,self.x,self.y-game.y0) #errorhere
+            image (self.img,self.x,self.y-game.y0) 
         else:
             image (self.img,self.x,self.y-game.y1)
    
-        
 class Fireball(Asteroid):
     def __init__(self,x, x1, x2,dx ,y,r,img,w,h,which_y): #x1, x2 are start and end of asteroid
         Asteroid.__init__(self,x, x1, x2,dx ,y,r,img,w,h,which_y)
@@ -210,32 +202,31 @@ class Fireball(Asteroid):
         if self.x < self.x2:
             self.x = self.x1
     
-    
-    
 class Rocket(Character):
-    def __init__(self,x,x1,x2,dx,y,r,img,w,h, which_y):
+    def __init__(self,x,x1,x2,dx,y,r,img,w,h, which_y,side):
         Character.__init__(self,x,y,r,img,w,h)
         self.x1=x1
         self.x2=x2
         self.y1=self.y #y1 to check initial position)
         self.dx=dx
         self.which_y=which_y
-        
+        self.side = side 
+        if self.side == "right":
+            self.dx = -self.dx
     def update(self):
-        self.x+=2
-        if self.x > self.x2:
-            self.x = self.x1
-
-            
+        self.x += self.dx
+        if self.side == "left":     
+            if self.x > self.x2:
+                self.x = self.x1  
+        elif self.side == "right":
+            if self.x < self.x1:
+                self.x = self.x2   
     def display(self):        
-        
         if self.which_y == 0:
             image (self.img,self.x,self.y-game.y0) #errorhere
         else:
             image (self.img,self.x,self.y-game.y1)
-    
-        
-        
+
 class Destination1(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h) 
@@ -288,7 +279,7 @@ class Game():
         self.framerate=0
         self.time=0
         self.endgame=endgame
-        
+        self.TESTLIST = [1,2,3,4,10]
         #initial num of lives is 3 for each player
         self.numlives1=3
         self.numlives2=3
@@ -309,17 +300,8 @@ class Game():
         self.fireballs1=[]
         self.fireballs2=[]
         
-        # if self.gamestate1!="menu" and self.gamestate2!="menu":
-        #     print("not menu")
-        #     self.loadStage()
-        
-       
-    
-    
         
     def loadStage(self):
-            
-        
         print("Now loading stage")
         
         file=open(path+"/level"+str(self.level)+".csv","r")
@@ -351,21 +333,28 @@ class Game():
             if l[0]=="RocketP1":
                 cnt=0
                 for i in range(3):
-                    self.rockets.append(Rocket((cnt*int(l[1])+cnt*100),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0))
+                    self.rockets.append(Rocket((cnt*int(l[1])+cnt*100),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
                     cnt+=1
                 cnt=0
                 for i in range(3):
-                    self.rockets.append(Rocket(120+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-150,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0))
+                    self.rockets.append(Rocket(120+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
                     cnt+=1
-                    
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket(240+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
+                    cnt+=1
+                cnt = 0
+                for i in range(3):
+                    self.rockets.append(Rocket(360+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
+                    cnt+=1
             if l[0]=="RocketP2":
                 cnt=0
                 for i in range(3):
-                    self.rockets2.append(Rocket((650+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1))
+                    self.rockets2.append(Rocket((650+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
                     cnt+=1
                 cnt=0
                 for i in range(3):
-                    self.rockets2.append(Rocket(700+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-150,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1))
+                    self.rockets2.append(Rocket(700+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-150,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
                     cnt+=1
                     
                     
@@ -398,22 +387,15 @@ class Game():
     def display(self):
         self.framerate+=2
         y0=self.y0 % self.h
-        
-        
-        # print(self.y, self.h, y)
-        # print(self.y)
-        
         y1=self.y1%self.h
         
-        image (self.bg, 0,0,self.w,self.h-y0,              0,y0,self.w,self.h) 
+        image (self.bg, 0,0,self.w,self.h-y0,0,y0,self.w,self.h) 
         image (self.bg, 0,self.h-y0,self.w,y0,    0,0,self.w,y0)
         
         image (self.bg2, self.w//2,0,self.w,self.h-y1,              0,y1,self.w,self.h) 
         image (self.bg2, self.w//2,self.h-y1,self.w,y1,    0,0,self.w,y1)
         # print (self.h-y)
-       
 
-        
         # image (self.bg,0,0,self.w,self.h)
         line(self.w//2,0,self.w//2,800)
         for x in self.asteroids1:
@@ -442,7 +424,7 @@ class Game():
         self.alien.display()
         self.alien2.display()
         
-        #TIMER BAR
+        # Timer bar for game 1
         stroke(255)
         fill(255)
         text("TIME",50,40)
@@ -453,17 +435,13 @@ class Game():
         rect(50,50,max(0,100-(self.time*1)),20)
         
         
-        #time for player 2
+        #time bar for game 2
         text("TIME",self.w//2+50,40)
         fill(0)
         rect((self.w//2)+50,50,100,20)
         self.time=(self.framerate//60)
         fill(255)
         rect(self.w//2+50, 50, max((0),(100-(self.time*1))),  20)
-        
-    
-        
-        
         
     def update(self):
         self.alien.update()
