@@ -630,6 +630,12 @@ def mouseClicked():
         game.gamestate2="play"
         level=1 #SETTING LEVEL
         game.level = level
+        maxy=-2000
+        game.maxy=-2000
+        maxmid=-1050
+        game.maxmid=-1050
+        time=60
+        game.time=60
         game.loadStage()
         #set max, endpoint,time
         
@@ -645,12 +651,7 @@ def mouseClicked():
         game.gamestate2="play"
         level=3 #SETTING LEVEL
         game.level = level
-        maxy=-2000
-        game.maxy=-2000
-        maxmid=-1050
-        game.maxmid=-1050
-        time=60
-        game.time=60
+        
         game.loadStage()
         
         
