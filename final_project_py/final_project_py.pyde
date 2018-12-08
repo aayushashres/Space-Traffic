@@ -42,7 +42,7 @@ class Alien(Character):
             if self.x-self.r<0:
                 self.x=self.r
             if self.x+self.r>=game.w//2:
-                self.x=(game.w//2)-self.r
+                self.x=(game.w//2)-(self.r*2)
                 
             if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
                 game.y0 += self.dy
@@ -138,10 +138,10 @@ class Alien2(Character):
             self.y+=self.dy
 
             if self.x+self.r<=game.w//2:
-                self.x=(game.w//2)+self.r
+                self.x=(game.w//2)
                 
-            if self.x+self.r>game.w:
-                self.x=game.w-self.r
+            if self.x+(self.r*2)>game.w:
+                self.x=game.w-(self.r*2)
 
             if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
                 game.y1 += self.dy
@@ -299,6 +299,8 @@ class Game():
         self.numlives1=3
         self.numlives2=3
         
+        self.lives=loadImage(path+"/images/life.png")
+        
         
         # self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
         # self.dest2=Destination1(self.w//2,-1000,30,"planet.png",60,60,1)
@@ -443,12 +445,6 @@ class Game():
         self.dest1.display()
         self.dest2.display()
         
-            
-            
-        
-        self.alien.display()
-        self.alien2.display()
-        
         # Timer bar for game 1
         stroke(255)
         fill(255)
@@ -467,6 +463,17 @@ class Game():
         self.time=(self.framerate//60)
         fill(255)
         rect(self.w//2+50, 50, max((0),(100-(self.time))),  20)
+        
+        #LIVES DISPLAY
+        for i in range(self.numlives1):
+            image(self.lives, 40 +(i*45),80)
+        for i in range(self.numlives2):
+            image(self.lives, 640+(i*45),80)
+            
+        
+        self.alien.display()
+        self.alien2.display()
+        
         
     def update(self):
         self.alien.update()
