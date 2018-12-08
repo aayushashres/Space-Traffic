@@ -228,36 +228,38 @@ class Rocket(Character):
             image (self.img,self.x,self.y-game.y1)
 
 class Destination1(Character):
-    def __init__(self,x,y,r,img,w,h):
+    def __init__(self,x,y,r,img,w,h,which_y):
         Character.__init__(self,x,y,r,img,w,h) 
         self.dx=0
         self.dy=0
         self.y1=self.y
+        self.which_y=which_y
         
     def update(self):
         return
         
         
     def display(self):
-        image(self.img,self.x,self.y-game.y0)
+        if self.which_y==0:
+            image(self.img,self.x,self.y-game.y0)
+        else:
+            image(self.img,self.x,self.y-game.y1)
         # print("planet y: ", self.y)
         
+
         
-class Destination2(Character):
-    def __init__(self,x,y,r,img,w,h):
-        Character.__init__(self,x,y,r,img,w,h) 
-        self.dx=0
-        self.dy=0
-        self.y1=self.y # y1 to maintain initial position of object 
-        
-        
-    def update(self):
-        return
+class Coins(Character):
+    def __init__(self):
+        Character.__init__(self,x,y,r,img,w,h,which_y)
+        self.which_y=which_y 
         
     def display(self):
-         #CHANGES MADE HERE:
-        image(self.img,self.x,self.y-game.y1)
-        # print("planet y: ", self.y)
+        if self.which_y==0:
+            image(self.img,self.x,self.y-game.y0)
+        else:
+            image(self.img,self.x,self.y-game.y1)
+        
+    
         
     
 
@@ -284,8 +286,8 @@ class Game():
         self.numlives1=3
         self.numlives2=3
         
-        self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60)
-        self.dest2=Destination2(self.w//2,-1000,30,"planet.png",60,60)
+        self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
+        self.dest2=Destination1(self.w//2,-1000,30,"planet.png",60,60,1)
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
@@ -415,8 +417,8 @@ class Game():
             f.display()
         for f in self.fireballs2:
             f.display()
-        # self.dest1.display()
-        # self.dest2.display()
+        self.dest1.display()
+        self.dest2.display()
         
             
             
