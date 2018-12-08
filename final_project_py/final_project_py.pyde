@@ -201,6 +201,12 @@ class Fireball(Asteroid):
         self.x-=2
         if self.x < self.x2:
             self.x = self.x1
+    def display(self):
+        if self.which_y==0:
+            image (self.img,self.x,self.y-game.y0) 
+        else:
+            image(self.img,self.x,self.y-game.y1)
+            
     
 class Rocket(Character):
     def __init__(self,x,x1,x2,dx,y,r,img,w,h, which_y,side):
