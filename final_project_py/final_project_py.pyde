@@ -450,19 +450,21 @@ class Game():
         fill(255)
         text("TIME",50,40)
         fill(0)
-        rect(50,50,100,20)
-        self.time=(self.framerate//60)
+        rect(50,50,120,20)
+        self.time=(self.framerate//60)*2
         fill(255)
-        rect(50,50,max(0,100-(self.time)),20)
+        rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
+        # textSize(30)
+        # text(self.framerate//60,160,20)
         
         
         #time bar for game 2
         text("TIME",self.w//2+50,40)
         fill(0)
-        rect((self.w//2)+50,50,100,20)
+        rect((self.w//2)+50,50,120,20)
         self.time=(self.framerate//60)
         fill(255)
-        rect(self.w//2+50, 50, max((0),(100-(self.time))),  20)
+        rect(self.w//2+50, 50, max((0),(120-(self.time))),  20)
         
         #LIVES DISPLAY
         for i in range(self.numlives1):
@@ -500,7 +502,7 @@ class Game():
             
             
         
-game=Game(1200,800,level,-2000,-1050,60)
+game=Game(1200,800,level,maxy,maxmid,time)
 
 def setup():
    size(game.w,game.h)
@@ -550,7 +552,7 @@ def draw():
         elif game.gamestate1=="instruction" and game.gamestate2=="instruction":
                 # print("reached")
                 image(game.bgmenu,0,0,1200,800)
-                image(game.instr,game.w//5.5,game.h//5.5,800,400)
+                image(game.instr,game.w//5.5,game.h//5,800,400)
                 
                 if game.w//2 < mouseX < game.w//2 + 200 and game.h//3+400 < mouseY < game.h//3 + 450:
                     fill(0,255,0)
@@ -643,6 +645,12 @@ def mouseClicked():
         game.gamestate2="play"
         level=3 #SETTING LEVEL
         game.level = level
+        maxy=-2000
+        game.maxy=-2000
+        maxmid=-1050
+        game.maxmid=-1050
+        time=60
+        game.time=60
         game.loadStage()
         
         
