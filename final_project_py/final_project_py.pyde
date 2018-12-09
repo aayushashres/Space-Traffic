@@ -648,6 +648,13 @@ def mouseClicked():
         game.gamestate2="play"
         level=2 #SETTING LEVEL
         game.level = level
+        maxy=-2000
+        game.maxy=-2000  #USING VAL FROM LEVEL 1 FOR NOW
+        maxmid=-1050
+        game.maxmid=-1050
+        time=60
+        game.time=60
+        
         game.loadStage()
     
     if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 250: 
@@ -655,6 +662,12 @@ def mouseClicked():
         game.gamestate2="play"
         level=3 #SETTING LEVEL
         game.level = level
+        maxy=-2000
+        game.maxy=-2000  #USING VAL FROM LEVEL 1 FOR NOW
+        maxmid=-1050
+        game.maxmid=-1050
+        time=60
+        game.time=60
         
         game.loadStage()
         
