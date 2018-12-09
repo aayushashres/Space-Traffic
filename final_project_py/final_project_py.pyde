@@ -95,6 +95,9 @@ class Alien(Character):
                         if game.numlives1<=0:                               
                             game.gamestate1="over"
                     delay(200)
+            # win check when destination is reached 
+            if self.distance(game.dest1) <= (self.r + game.dest1.r):
+                game.gamestate1 = "won"
                            
         
     def distance(self,target):
@@ -103,7 +106,7 @@ class Alien(Character):
     def between_rockets(self, rocket_list):
         closest_in_line = rocket_list[0]
         for r in rocket_list:
-            if r.y - self.y < 80:
+            if r.y - self.y < 50:
                 closest_in_line = r
                 # this function checks if the outer limit of the alien is within the limits of the rocket, if only the two outer limits of the alien and the object 
                 # are intersecting, that is enough, this is to keep the game lenient, espectially as it is really easy to lose in section 
@@ -194,7 +197,11 @@ class Alien2(Character):
                         print(game.numlives2)
                         if game.numlives2<=0:                               
                             game.gamestate2="over"
-                          #  delay(200)
+                    delay(200)
+            # win check when destination is reached 
+            if self.distance(game.dest2) <= (self.r + game.dest2.r):
+                game.gamestate2 = "won"
+    
                            
     
     def distance(self,target): #dist between asteroid and player
@@ -203,7 +210,7 @@ class Alien2(Character):
     def between_rockets(self, rocket_list):
         closest_in_line = rocket_list[0]
         for r in rocket_list:
-            if r.y - self.y < 80:
+            if r.y - self.y < 50:
                 closest_in_line = r
                 # this function checks if the outer limit of the alien is within the limits of the rocket, if only the two outer limits of the alien and the object 
                 # are intersecting, that is enough, this is to keep the game lenient, espectially as it is really easy to lose in section 
@@ -512,15 +519,18 @@ class Game():
         # textSize(30)
         # text(self.framerate//60,160,20)
         
+        # right now the word time turns black when the state in game one changes -- work on that 
         
         #time bar for game 2
+        stroke(255)
         text("TIME",self.w//2+50,40)
         fill(0)
         rect((self.w//2)+50,50,120,20)
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
             self.time=(self.framerate//60)
             fill(255)
-            rect(self.w//2+50, 50, max((0),(120-(self.time))),  20)
+            rect(self.w//2+50, 50, max((0),(120-(self.time))),20)
+  
         
         #LIVES DISPLAY
         for i in range(self.numlives1):
@@ -619,13 +629,11 @@ def draw():
         elif game.gamestate1=="play" and game.gamestate2=="play":
             game.display()
     
-        ##WORK ON GAMEOVER DISPLAYING ON BOTH SIDES    
         if game.gamestate1=="over":
             game.display()
             fill(255,0,0)
             textSize(50)
-            text("Gameover",game.w//4,game.h//2)
-            
+            text("Gameover",0,game.h//2)
         if game.gamestate2=="over":
             game.display()
             fill(255,0,0)
@@ -636,8 +644,43 @@ def draw():
             game.display()
             fill(255,0,0)
             textSize(50)
-            text("Gameover",game.w//4,game.h//2)
+            text("Gameover",0,game.h//2)
             text("Gameover",game.w//2,game.h//2)
+        if game.gamestate1=="won":
+            game.display()
+            fill(0,255,0) # won will be in green 
+            textSize(50)
+            text("Game Won!",0,game.h//2)
+        if game.gamestate2=="won":
+            game.display()
+            fill(0,255,0)
+            textSize(50)
+            text("Game Won!",game.w//2,game.h//2)
+        if game.gamestate1 == "won" and game.gamestate2 == "won":
+            game.display()
+            fill(0,255,0)
+            textSize(50)
+            text("Game Won!",0,game.h//2)
+            text("Game Won!",game.w//2,game.h//2)
+        if game.gamestate1=="won" and game.gamestate2=="over":
+            game.display()
+            fill(0,255,0)
+            textSize(50)
+            text("Game Won!",0,game.h//2)
+            fill(255,0,0)
+            text("Gameover",game.w//2,game.h//2)
+        if game.gamestate2=="won" and game.gamestate1=="over":
+            game.display()
+            fill(255,0,0)
+            textSize(50)
+            text("Gameover",0,game.h//2)
+            fill(0,255,0)
+            text("Game Won!",game.w//2,game.h//2)
+            
+        
+            
+            
+
             
         
         
