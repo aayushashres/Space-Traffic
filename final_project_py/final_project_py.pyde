@@ -1,4 +1,4 @@
-import os
+import os, time
 
 path=os.getcwd()
 class Character():
@@ -52,9 +52,10 @@ class Alien(Character):
     
             # asteroid collision
             for x in game.asteroids1:
-                # print(self.distance(x))
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
+                    # the delay function built in to processing will prevent one collision from counting as many and removing all three lives at one 
+                    delay(200)
                     self.y=750
                     print(game.numlives1)
                     if game.numlives1<=0:
@@ -63,52 +64,48 @@ class Alien(Character):
             for x in game.fireballs1:
                  if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
+                    delay(200)
                     self.y=750
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # Rocket Part
-            if self.y <= 300 and self.y >= 50: # if the alien is in the segment of the game that contains the rockets 
-                if self.distance(x) <= self.r + x.r and self.keyHandler[UP] == True: #and self.keyHandler[LEFT] == False and self.keyHandler[RIGHT] == False and self.keyHandler[UP] == False and self.keyHandler[DOWN] == False:
-                    self.dy = 0
-                    self.x = x.x
-                    self.y = x.y
-                    self.dx = 0
-                if self.between_rockets(game.rockets) == False:
-                    game.numlives1-=1
-                    self.y=750
-                    game.y0 = 0
-                    print(game.numlives1)
-                    if game.numlives1<=0:
-                        game.gamestate1="over"
+            if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
+                # part of the game is that you must move on the next row of rockets before they move off screen, so if you dont, you still lose a life and start over
+                for x in game.rockets:
+                    if self.distance(x) <= self.r + x.r: 
+                        self.dy = 0
+                        self.x = x.x
+                     #   self.dx = x.dx
+                        # rocket update
+                        if x.side == "left":     
+                            if x.x > x.x2:
+                                self.x = r.x1  
+                        elif x.side == "right":
+                            if x.x < x.x1:
+                                self.x = x.x2   
+                    if self.between_rockets(game.rockets) == False: #self.keyHandler[UP] == True 
+                        game.numlives1-=1
+                        delay(200)
+                        self.y=750
+                        game.y0 = 0
+                        print(game.numlives1)
+                        if game.numlives1<=0:
+                            game.gamestate1="over"
         
     def distance(self,target):
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
     
-    
-    # check if the player is currently in the space between two horizontally scrolling rows of rockets
-    # used for death-checking when in the rocket area: if the player is moving from rocket to rocket, that's fine,
-    # but if they end up trying to fly when there's no rocket in front of them, they die
-    # we take a list of rocket objects as parameter so there's no need to re-write the function for the other rocket, just pass it the relevant list
     def between_rockets(self, rocket_list):
         closest_in_line = rocket_list[0]
-        # step 1: find the rocket which is vertically in line with self AND has the smallest distance to self
         for r in rocket_list:
             if r.y - self.y < 80:
-           # if self.x >= r.x and self.x <= (r.x + r.w):
                 closest_in_line = r
-                if self.x >= closest_in_line.x and self.x <= (closest_in_line.x + closest_in_line.w):
-                    return True 
-                else:
-                    return False
-                
-            
-        # step 2: check distance from self to closest_in_line. 
-        # if it's less than, say, 80 (although rly you should dynamic this out but for now hardcode is fine)
-        # return True
-        # else return False
+                # this function checks if the outer limit of the alien is within the limits of the rocket, if only the two outer limits of the alien and the object 
+                # are intersecting, that is enough, this is to keep the game lenient, espectially as it is really easy to lose in section 
+                if (self.x + self.w) >= closest_in_line.x and self.x <= (closest_in_line.x + closest_in_line.w):
+                    return True
         return False 
-    
     
     def display(self):
         self.update()
@@ -307,6 +304,7 @@ class Game():
         
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
+        self.rocketbg1=loadImage(path+"/images/rocketbg.jpg")
         self.bgmenu=loadImage(path+"/images/menubg.png")
         self.instr=loadImage(path+"/images/instructions.png")
         
@@ -416,11 +414,17 @@ class Game():
         y0=self.y0 % self.h
         y1=self.y1%self.h
         
-        image (self.bg, 0,0,self.w,self.h-y0,0,y0,self.w,self.h) 
-        image (self.bg, 0,self.h-y0,self.w,y0,    0,0,self.w,y0)
+        image (self.bg,0,0,self.w,self.h-y0,0,y0,self.w,self.h) 
+        image (self.bg,0,self.h-y0,self.w,y0,0,0,self.w,y0)
         
-        image (self.bg2, self.w//2,0,self.w,self.h-y1,              0,y1,self.w,self.h) 
-        image (self.bg2, self.w//2,self.h-y1,self.w,y1,    0,0,self.w,y1)
+        
+       # image(self.rocketbg1,0,20,self.w,350-y0,0,y0,self.w,330)
+       # image(self.rocketbg1,0,350-self.y0,self.w,y0,0,20,self.w,y0)
+       # image (self.rocketbg1,0,30,self.w,300-self.y0,0,y0,self.w,self.h)
+        #image (self.rocketbg1,0,250-y0,self.w,y0,0,0,self.w,y0)
+        
+        image (self.bg2,self.w//2,0,self.w,self.h-y1,0,y1,self.w,self.h) 
+        image (self.bg2,self.w//2,self.h-y1,self.w,y1,0,0,self.w,y1)
         # print (self.h-y)
 
         # image (self.bg,0,0,self.w,self.h)
