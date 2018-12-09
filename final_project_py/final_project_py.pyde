@@ -83,15 +83,19 @@ class Alien(Character):
                                 self.x = r.x1  
                         elif x.side == "right":
                             if x.x < x.x1:
-                                self.x = x.x2   
-                    if self.between_rockets(game.rockets) == False: #self.keyHandler[UP] == True 
+                                self.x = x.x2
+                # this if statment already iterates over the rocket list, therefore, it should not be under the above if statment since that is redundant
+                # this was causing all three lives to be lost before
+                if self.between_rockets(game.rockets) == False: #self.keyHandler[UP] == True 
+                    for i in range(1): # to prevent losing all three lives at once 
                         game.numlives1-=1
-                        delay(200)
                         self.y=750
                         game.y0 = 0
                         print(game.numlives1)
-                        if game.numlives1<=0:
+                        if game.numlives1<=0:                               
                             game.gamestate1="over"
+                    delay(200)
+                           
         
     def distance(self,target):
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
@@ -151,6 +155,7 @@ class Alien2(Character):
                 # print(self.distance(x))
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives2-=1
+                    delay(200)
                     self.y=750
                     print(game.numlives2)
                     if game.numlives2<=0:
@@ -158,15 +163,53 @@ class Alien2(Character):
             # fireball collision
             for x in game.fireballs2: #WORK ON COLLISION FOR FIREBALL
                 if self.distance(x) <= self.r+ x.r :
-                    game.numlives1-=1
+                    game.numlives2-=1
+                    delay(200)
                     self.y=750
-                    print(game.numlives1)
+                    print(game.numlives2)
                     if game.numlives1<=0:
-                        game.gamestate1="over"
+                        game.gamestate2="over"
+            # Rocket Part 
+            if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
+                # part of the game is that you must move on the next row of rockets before they move off screen, so if you dont, you still lose a life and start over
+                for x in game.rockets2: # change from alien 1
+                    if self.distance(x) <= self.r + x.r: 
+                        self.dy = 0
+                        self.x = x.x
+                     #   self.dx = x.dx
+                        # rocket update
+                        if x.side == "left":     
+                            if x.x > x.x2:
+                                self.x = r.x1  
+                        elif x.side == "right":
+                            if x.x < x.x1:
+                                self.x = x.x2
+                # this if statment already iterates over the rocket list, therefore, it should not be under the above if statment since that is redundant
+                # this was causing all three lives to be lost before
+                if self.between_rockets(game.rockets2) == False: #self.keyHandler[UP] == True 
+                    for i in range(1): # to prevent losing all three lives at once 
+                        game.numlives2-=1 # different from alien 1
+                        self.y=750
+                        game.y1 = 0 # change from alien 1 
+                        print(game.numlives2)
+                        if game.numlives2<=0:                               
+                            game.gamestate2="over"
+                          #  delay(200)
+                           
     
     def distance(self,target): #dist between asteroid and player
-        
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+    def between_rockets(self, rocket_list):
+        closest_in_line = rocket_list[0]
+        for r in rocket_list:
+            if r.y - self.y < 80:
+                closest_in_line = r
+                # this function checks if the outer limit of the alien is within the limits of the rocket, if only the two outer limits of the alien and the object 
+                # are intersecting, that is enough, this is to keep the game lenient, espectially as it is really easy to lose in section 
+                if (self.x + self.w) >= closest_in_line.x and self.x <= (closest_in_line.x + closest_in_line.w):
+                    return True
+        return False 
     
     def display(self):
         self.update()
@@ -230,7 +273,7 @@ class Rocket(Character):
         else:
             image (self.img,self.x,self.y-game.y1)
 
-class Destination1(Character):
+class Destination(Character):
     def __init__(self,x,y,r,img,w,h,which_y):
         Character.__init__(self,x,y,r,img,w,h) 
         self.dx=0
@@ -367,13 +410,20 @@ class Game():
             if l[0]=="RocketP2":
                 cnt=0
                 for i in range(3):
-                    self.rockets2.append(Rocket((650+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    self.rockets2.append(Rocket((600+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
                     cnt+=1
                 cnt=0
                 for i in range(3):
-                    self.rockets2.append(Rocket(700+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-150,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    self.rockets2.append(Rocket(720+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
                     cnt+=1
-                    
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(840+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(960+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    cnt+=1
                     
             if l[0]=="FireballP1":
                 cnt=0
@@ -389,9 +439,9 @@ class Game():
                 print (self.fireballs2)
                 
             if l[0]=="Dest1":
-                self.dest1=Destination1(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
+                self.dest1=Destination(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
             if l[0]=="Dest2":
-                self.dest2=Destination1(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
+                self.dest2=Destination(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
                 
     
                 
@@ -455,9 +505,10 @@ class Game():
         text("TIME",50,40)
         fill(0)
         rect(50,50,120,20)
-        self.time=(self.framerate//60)*2
-        fill(255)
-        rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
+        if self.gamestate1 == "play": # when the game is lost, the time will stop counting downwww
+            self.time=(self.framerate//60)*2
+            fill(255)
+            rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
         # textSize(30)
         # text(self.framerate//60,160,20)
         
@@ -466,9 +517,10 @@ class Game():
         text("TIME",self.w//2+50,40)
         fill(0)
         rect((self.w//2)+50,50,120,20)
-        self.time=(self.framerate//60)
-        fill(255)
-        rect(self.w//2+50, 50, max((0),(120-(self.time))),  20)
+        if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
+            self.time=(self.framerate//60)
+            fill(255)
+            rect(self.w//2+50, 50, max((0),(120-(self.time))),  20)
         
         #LIVES DISPLAY
         for i in range(self.numlives1):
@@ -579,6 +631,14 @@ def draw():
             fill(255,0,0)
             textSize(50)
             text("Gameover",game.w//2,game.h//2)
+        # if both games are lost, the gameover sign will display on both
+        if game.gamestate1 == "over" and game.gamestate2 == "over":
+            game.display()
+            fill(255,0,0)
+            textSize(50)
+            text("Gameover",game.w//4,game.h//2)
+            text("Gameover",game.w//2,game.h//2)
+            
         
         
 
