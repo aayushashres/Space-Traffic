@@ -530,7 +530,7 @@ class Game():
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
             self.time=(self.framerate//60)          
             fill(255)
-            rect(self.w//2+50, 50, max((0),(120-(self.time))),20)
+
   
         
         #LIVES DISPLAY

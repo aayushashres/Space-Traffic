@@ -2,5 +2,5 @@ AsteroidP1, 150, 0, 550, 2, 650, 25, “asteroid.png”, 50,50
 AsteroidP2, 150, 625, 1175, 2, 650, 25, “asteroid.png”,50,50  
 RocketP1, 100,0,525,2,300,25,"spaceship.png",50,25
 RocketP2, 100,625,1170,2,300,25,"spaceship.png",50,50
-Dest1,300,-1000,30,"planet.png",60,60
-Dest2,900,-1000,30,"planet.png",60,60
+Dest1,300,-1000,30,"planet.png",120,120
+Dest2,900,-1000,30,"planet.png",120,120
