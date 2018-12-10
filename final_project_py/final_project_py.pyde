@@ -509,11 +509,11 @@ class Game():
         # Timer bar for game 1
         stroke(255)
         fill(255)
-        text("TIME",50,40)
+        text("TIME",50,40)      
         fill(0)
         rect(50,50,120,20)
         if self.gamestate1 == "play": # when the game is lost, the time will stop counting downwww
-            self.time=(self.framerate//60)*2
+            self.time=(self.framerate//60)
             fill(255)
             rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
         # textSize(30)
@@ -523,11 +523,12 @@ class Game():
         
         #time bar for game 2
         stroke(255)
-        text("TIME",self.w//2+50,40)
+        fill (255)
+        text("TIME",self.w//2+50,40)        
         fill(0)
         rect((self.w//2)+50,50,120,20)
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
-            self.time=(self.framerate//60)
+            self.time=(self.framerate//60)          
             fill(255)
             rect(self.w//2+50, 50, max((0),(120-(self.time))),20)
   
