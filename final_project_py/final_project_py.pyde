@@ -294,9 +294,9 @@ class Destination(Character):
         
     def display(self):
         if self.which_y==0:
-            image(self.img,self.x,self.y-game.y0)
+            image(self.img,self.x,self.y-game.y0,self.w,self.h)
         else:
-            image(self.img,self.x,self.y-game.y1)
+            image(self.img,self.x,self.y-game.y1,self.w,self.h)
         # print("planet y: ", self.y)
         
 
@@ -312,10 +312,7 @@ class Coins(Character):
         else:
             image(self.img,self.x,self.y-game.y1)
         
-    
         
-    
-
 level=0
 maxy=0
 maxmid=0
@@ -358,7 +355,8 @@ class Game():
         self.bgmenu=loadImage(path+"/images/menubg.png")
         self.instr=loadImage(path+"/images/instructions.png")
         
-        
+        self.coins1=[]
+        self.coin2=[]
         self.asteroids1=[]
         self.asteroids2=[]
         self.rockets=[]
@@ -449,6 +447,9 @@ class Game():
                 self.dest1=Destination(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
             if l[0]=="Dest2":
                 self.dest2=Destination(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
+                
+        
+                
                 
     
                 
@@ -678,13 +679,6 @@ def draw():
             fill(0,255,0)
             text("Game Won!",game.w//2,game.h//2)
             
-        
-            
-            
-
-            
-        
-        
 
 def keyPressed():
     if keyCode == LEFT:
