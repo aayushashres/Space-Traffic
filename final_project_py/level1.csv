@@ -4,3 +4,5 @@ RocketP1, 100,0,525,2,300,25,"spaceship.png",50,25
 RocketP2, 100,625,1170,2,300,25,"spaceship.png",50,50
 Dest1,300,-1000,30,"planet.png",120,120
 Dest2,900,-1000,30,"planet.png",120,120
+Coin1,5
+Coin2,5
