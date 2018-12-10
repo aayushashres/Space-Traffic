@@ -49,7 +49,19 @@ class Alien(Character):
                 
             if self.y+self.r>=game.h:
                 self.y=game.h - (self.r*2)
+            if self.y+self.r<=game.maxy:
+                self.y=game.maxy
+            # print("alien y: ", self.y)
+            # print(game.maxy)
     
+    
+    
+            #COIN COLLECTION
+            for x in game.coins1:
+                if self.distance(x)<=self.r+x.r:
+                    game.coins1.remove(x)
+                    game.coincount1+=1
+                    
             # asteroid collision
             for x in game.asteroids1:
                 if self.distance(x) <= self.r+ x.r :
@@ -152,6 +164,9 @@ class Alien2(Character):
                 
             if self.y+self.r>=game.h:
                 self.y=game.h-(self.r*2)
+                
+            if self.y+self.r<=game.maxy:
+                self.y=game.maxy
             
             # asteroid collision   
             for x in game.asteroids2:
@@ -302,8 +317,8 @@ class Destination(Character):
 
         
 class Coins(Character):
-    def __init__(self):
-        Character.__init__(self,x,y,r,img,w,h,which_y)
+    def __init__(self,x,y,r,img,w,h,which_y):
+        Character.__init__(self,x,y,r,img,w,h)
         self.which_y=which_y 
         
     def display(self):
@@ -338,12 +353,15 @@ class Game():
         self.framerate=0
         self.time=0
         
+        self.coincount1=0
+        
         self.TESTLIST = [1,2,3,4,10]
         #initial num of lives is 3 for each player
         self.numlives1=3
         self.numlives2=3
         
         self.lives=loadImage(path+"/images/life.png")
+        self.coin=loadImage(path+"/images/coin.png")
         
         
         # self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
@@ -356,7 +374,7 @@ class Game():
         self.instr=loadImage(path+"/images/instructions.png")
         
         self.coins1=[]
-        self.coin2=[]
+        self.coins2=[]
         self.asteroids1=[]
         self.asteroids2=[]
         self.rockets=[]
@@ -448,8 +466,16 @@ class Game():
             if l[0]=="Dest2":
                 self.dest2=Destination(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
                 
-        
+            if l[0]=="Coin1":
+                numcoins1=0
+                for i in range(5):    
+                    x=random(1,550)
+                    y=620
+            
+                    self.coins1.append(Coins(x,y,5,"coin.png",10,10,0))
                 
+        
+            
                 
     
                 
@@ -539,6 +565,17 @@ class Game():
             image(self.lives, 40 +(i*45),80)
         for i in range(self.numlives2):
             image(self.lives, 640+(i*45),80)
+            
+        for x in self.coins1:
+            x.display()
+            
+        #COINS DISPLAY
+        imageMode(CENTER)
+        image(self.coin,550,75)
+        imageMode(CORNER)
+        textSize(20)
+        fill(255)
+        text(str(self.coincount1)+"X", 510,80)
             
         
         self.alien.display()
@@ -732,8 +769,8 @@ def mouseClicked():
         game.gamestate2="play"
         level=1 #SETTING LEVEL
         game.level = level
-        maxy=-2000
-        game.maxy=-2000
+        maxy=-1000
+        game.maxy=-1000
         maxmid=-1050
         game.maxmid=-1050
         time=60
@@ -746,10 +783,10 @@ def mouseClicked():
         game.gamestate2="play"
         level=2 #SETTING LEVEL
         game.level = level
-        maxy=-2000
-        game.maxy=-2000  #USING VAL FROM LEVEL 1 FOR NOW
+        maxy=-1000
+        game.maxy=maxy  #USING VAL FROM LEVEL 1 FOR NOW
         maxmid=-1050
-        game.maxmid=-1050
+        game.maxmid=maxmid
         time=60
         game.time=60
         
