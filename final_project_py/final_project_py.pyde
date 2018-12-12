@@ -24,15 +24,15 @@ class Alien(Character):
     def update(self):
         if game.gamestate1=="play":
             if self.keyHandler[LEFT]:
-                self.dx = -10
+                self.dx = -5
             elif self.keyHandler[RIGHT]:
-                self.dx = 10
+                self.dx = 5
             elif self.keyHandler[UP]:
                 self.dx = 0
-                self.dy = -10
+                self.dy = -5
             elif self.keyHandler[DOWN]:
                 self.dx=0
-                self.dy = 10
+                self.dy = 5
             else:
                 self.dx = self.dy = 0
                 
@@ -41,16 +41,16 @@ class Alien(Character):
             
             if self.x-self.r<0:
                 self.x=self.r
-            if self.x+self.r>=game.w//2:
+            if self.x+(self.r*2)>=game.w//2:
                 self.x=(game.w//2)-(self.r*2)
                 
             if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
                 game.y0 += self.dy
                 
-            if self.y+self.r>=game.h:
+            if self.y+(self.r*2)>=game.h:
                 self.y=game.h - (self.r*2)
                 
-            if self.y+self.r<=game.maxy:
+            if self.ya<=game.maxy:
                 self.y=game.maxy
             #COIN COLLECTION
             for x in game.coins1:
@@ -133,31 +133,31 @@ class Alien2(Character):
     def update(self):
         if game.gamestate2=="play":
             if self.keyHandler[LEFT]:
-                self.dx = -10
+                self.dx = -5
             elif self.keyHandler[RIGHT]:
-                self.dx = 10
+                self.dx = 5
             elif self.keyHandler[UP]:
                 self.dx = 0
-                self.dy = -10
+                self.dy = -5
             elif self.keyHandler[DOWN]:
                 self.dx=0
-                self.dy = 10
+                self.dy = 5
             else:
                 self.dx = self.dy = 0
                 
             self.x+=self.dx
             self.y+=self.dy
 
-            if self.x+self.r<=game.w//2:
+            if self.x<=game.w//2:
                 self.x=(game.w//2)
                 
             if self.x+(self.r*2)>game.w:
                 self.x=game.w-(self.r*2)
 
-            if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
+            if self.y <= game.h // 2 and self.y > game.maxmid: #CHANGE 620 to endgame
                 game.y1 += self.dy
                 
-            if self.y+self.r>=game.h:
+            if self.y+(self.r*2)>=game.h:
                 self.y=game.h-(self.r*2)
                 
             if self.y+self.r<=game.maxy:
@@ -341,7 +341,8 @@ class Coins(Character):
     
     def distance(self,target): #dist between two coins
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
-        
+
+    
     
         
     
@@ -487,7 +488,7 @@ class Game():
                 while numcoins1 < int(l[1]):
                     # print("CHECK")
                     x=random(1,550)
-                    y=620
+                    y=random(maxy,800)
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
                     
                     
@@ -805,8 +806,8 @@ def mouseClicked():
         game.gamestate2="play"
         level=1 #SETTING LEVEL
         game.level = level
-        maxy=-2000
-        game.maxy=-2000
+        maxy=-1000
+        game.maxy=-1000
         maxmid=-1050
         game.maxmid=-1050
         time=60
