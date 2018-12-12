@@ -321,6 +321,26 @@ class Coins(Character):
             image(self.img,self.x,self.y-game.y0)
         else:
             image(self.img,self.x,self.y-game.y1)
+    
+    #to make sure coins dont overlap
+    def coincollision(self):
+        if self.which_y==0:
+            
+            for x in game.coins1:
+                
+                if self.distance(x) <= self.r+ x.r :
+                    return True
+            return False
+        else:
+            for x in game.coins2:
+                
+                if self.distance(x) <= self.r+ x.r : # collides
+                    return True
+            return False # doesn't collide with ANY coins
+        
+    
+    def distance(self,target): #dist between two coins
+        return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
         
     
         
@@ -462,11 +482,18 @@ class Game():
                 
             if l[0]=="Coin1":
                 numcoins1=0
-                for i in range(5):    
+                cointemp=None
+                # for i in range(5):    
+                while numcoins1 < int(l[1]):
+                    # print("CHECK")
                     x=random(1,550)
                     y=620
-            
-                    self.coins1.append(Coins(x,y,5,"coin.png",10,10,0))
+                    cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
+                    
+                    
+                    if not cointemp.coincollision():
+                        self.coins1.append(cointemp)
+                        numcoins1+=1
                 
             if l[0]=="Dest1":
                 self.dest1=Destination(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
@@ -490,6 +517,7 @@ class Game():
             self.y0 = 0
                 
     def display(self):
+        # print("now displaying")
         self.framerate+=1
         y0=self.y0 % self.h
         y1=self.y1%self.h
@@ -526,6 +554,9 @@ class Game():
             f.display()
         for f in self.fireballs2:
             f.display()
+            
+        for c in self.coins1:
+            c.display()
         self.dest1.display()
         self.dest2.display()
         
@@ -567,9 +598,9 @@ class Game():
             x.display()
             
         #COINS DISPLAY
-        imageMode(CENTER)
+    
         image(self.coin,550,75)
-        imageMode(CORNER)
+   
         textSize(20)
         fill(255)
         text(str(self.coincount1)+"X", 510,80)
@@ -663,6 +694,7 @@ def draw():
                 text("Return",game.w//2,game.h//3+440) 
         
         elif game.gamestate1=="play" and game.gamestate2=="play":
+            # print("states ok")
             game.display()
     
         if game.gamestate1=="over":
