@@ -50,7 +50,7 @@ class Alien(Character):
             if self.y+(self.r*2)>=game.h:
                 self.y=game.h - (self.r*2)
                 
-            if self.ya<=game.maxy:
+            if self.y<=game.maxy:
                 self.y=game.maxy
             #COIN COLLECTION
             for x in game.coins1:
@@ -104,6 +104,7 @@ class Alien(Character):
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
+                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time)*10)
                 game.gamestate1 = "won"
                            
         
@@ -316,6 +317,7 @@ class Coins(Character):
         Character.__init__(self,x,y,r,img,w,h)
         self.which_y=which_y 
         
+        
     def display(self):
         if self.which_y==0:
             image(self.img,self.x,self.y-game.y0)
@@ -341,6 +343,8 @@ class Coins(Character):
     
     def distance(self,target): #dist between two coins
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
+    
+   
 
     
     
@@ -371,6 +375,8 @@ class Game():
         self.gamestate2="menu"
         self.framerate=0
         self.time=0
+        
+        self.score1=0
         
         self.coincount1=0
         
@@ -482,13 +488,13 @@ class Game():
                 print (self.fireballs2)
                 
             if l[0]=="Coin1":
-                numcoins1=0
+                numcoins1=0 #to check number of coins in the level
                 cointemp=None
                 # for i in range(5):    
                 while numcoins1 < int(l[1]):
                     # print("CHECK")
-                    x=random(1,550)
-                    y=random(maxy,800)
+                    x=random(0,550)
+                    y=random(maxy,700)
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
                     
                     
@@ -572,7 +578,7 @@ class Game():
             fill(255)
             rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
         # textSize(30)
-        # text(self.framerate//60,160,20)
+        text(self.time,160,20)
         
         # right now the word time turns black when the state in game one changes -- work on that 
         
@@ -583,7 +589,8 @@ class Game():
         fill(0)
         rect((self.w//2)+50,50,120,20)
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
-            self.time=(self.framerate//60)          
+            self.time=(self.framerate//60)   
+                   
             fill(255)
             rect((self.w//2)+50,50,max(0,120-(self.time)),20)
 
@@ -629,7 +636,7 @@ class Game():
             f.update()
         for f in self.fireballs2:
             f.update()
-        
+    
             
         # self.dest1.update()
         # self.dest2.update()
@@ -720,6 +727,7 @@ def draw():
             fill(0,255,0) # won will be in green 
             textSize(50)
             text("Game Won!",0,game.h//2)
+            text("SCORE: "+str(game.score1),0,game.h//3)
         if game.gamestate2=="won":
             game.display()
             fill(0,255,0)

@@ -6,3 +6,5 @@ FireballP1,150, 550, 0, -2, 600, 25, fireball(left).png”, 50,50
 FireballP2,150, 1200, 650, -2, 600, 25, fireball(left).png”, 50,50
 Dest1,300,-1000,30,"planet.png",120,120
 Dest2,900,-1000,30,"planet.png",120,120
+Coin1,15
+Coin2,15
