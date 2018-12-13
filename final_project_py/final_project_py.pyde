@@ -1,4 +1,4 @@
-import os, time
+import os, time, random
 
 path=os.getcwd()
 class Character():
@@ -111,7 +111,19 @@ class Alien(Character):
             # win check when destination is reached 
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
                 game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time)*10) #score calculation
+                
+                
+                file=open(path+"/level"+str(game.level)+".csv","r")
+            
+                for l in file:
+                    l=l.strip().split(",")
+                    if l[0]=="Score":
+                        if game.score1>=l[1]:
+                            l[1]=game.score1
+                file.close()
+                
                 game.gamestate1 = "won"
+                
                            
         
     def distance(self,target):
@@ -194,7 +206,16 @@ class Alien2(Character):
                     if game.numlives1<=0:
                         game.gamestate2="over"
                         
+<<<<<<< HEAD
                         
+=======
+            #COINS
+            for x in game.coins2:
+                if self.distance(x)<=self.r+x.r:
+                    game.coins2.remove(x)
+                    game.coincount2+=1
+            
+>>>>>>> added coins for player2
             # Rocket Part 
             ys = [] # in order to avoid hardcoding the range in which there are rockets so that we can include rockets in other levels at different ranges
             for i in game.rockets2: # ys is a list of all the y values of the rockets which are all in the list rockets2, this for loop appends all the y values to this list
@@ -227,7 +248,20 @@ class Alien2(Character):
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest2) <= (self.r + game.dest2.r):
+                game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time)*10)
+                file=open(path+"/level"+str(game.level)+".csv","r")
+            
+                for l in file:
+                    l=l.strip().split(",")
+                    if l[0]=="Score":
+                        if game.score2>=l[1]:
+                            l[1]=game.score2
+                file.close()
                 game.gamestate2 = "won"
+                
+            #if time up, gameover
+            if game.time>=60:
+                game.gamestate2=="over"
     
                            
     
@@ -394,8 +428,10 @@ class Game():
         self.time=0
         
         self.score1=0
+        self.score2=0
         
         self.coincount1=0
+        self.coincount2=0
         
         self.TESTLIST = [1,2,3,4,10]
         #initial num of lives is 3 for each player
@@ -425,7 +461,7 @@ class Game():
         self.dest1=None
         self.dest2=None
         self.coins1=[]
-        self.coin2=[]
+        self.coins2=[]
         
     def loadStage(self):
         print("Now loading stage")
@@ -599,23 +635,34 @@ class Game():
         
             if l[0]=="Coin1":
                 numcoins1=0 #to check number of coins in the level
+                numcoins2=0
                 cointemp=None
+                cointemp2=None
                 # for i in range(5):    
-                while numcoins1 < int(l[1]):
+                while numcoins1 < int(l[1]) and numcoins2 < int(l[1]):
                     # print("CHECK")
-                    x=random(0,550)
-                    y=random(maxy,700)
+                    x=random.randint(0,550)
+                    y=random.randrange(maxy,700)
+                    x1=random.randint(620,1150)
+                    y1=random.uniform(maxy,700)
+                    print(x,y)
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
+                    cointemp2=(Coins(x1,y1,12,"coin.png",24,24,1))
                     
                     
                     if not cointemp.coincollision():
                         self.coins1.append(cointemp)
                         numcoins1+=1
+                    if not cointemp2.coincollision():
+                        self.coins2.append(cointemp2)
+                        numcoins2+=1
                 
             if l[0]=="Dest1":
                 self.dest1=Destination(int(l[1]),int(l[2]),int(l[3]),"planet.png",int(l[5]),int(l[6]),0)
             if l[0]=="Dest2":
                 self.dest2=Destination(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
+                
+            
                 
     
                 
@@ -673,6 +720,8 @@ class Game():
             f.display()
             
         for c in self.coins1:
+            c.display()
+        for c in self.coins2:
             c.display()
         self.dest1.display()
         self.dest2.display()
@@ -843,6 +892,7 @@ def draw():
             fill(0,255,0)
             textSize(50)
             text("Game Won!",game.w//2,game.h//2)
+            text("SCORE: "+str(game.score1),game.w//2,game.h//3)
         if game.gamestate1 == "won" and game.gamestate2 == "won":
             game.display()
             fill(0,255,0)
