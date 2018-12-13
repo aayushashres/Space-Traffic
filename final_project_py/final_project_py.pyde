@@ -536,12 +536,43 @@ class Game():
                 cnt=0
                 for i in range(3):
                     self.rockets2.append(Rocket(960+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    cnt+=1  
+                     
+            if l[0]=="RocketL3P1":
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket((cnt*int(l[1])+cnt*100),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket(120+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket(240+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
+                    cnt+=1
+                cnt = 0
+                for i in range(3):
+                    self.rockets.append(Rocket(360+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
+                    cnt+=1   
+            if l[0]=="RocketL3P2":
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket((600+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(720+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(840+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(960+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
                     cnt+=1     
                     
-                    
-                    
-                    
-
                     
             if l[0]=="FireballP1":
                 cnt=0
@@ -565,7 +596,7 @@ class Game():
                 for i in range(3):
                     self.fireballs2.append(Fireball((550-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
-                
+        
             if l[0]=="Coin1":
                 numcoins1=0 #to check number of coins in the level
                 cointemp=None
