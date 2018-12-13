@@ -1,11 +1,12 @@
 AsteroidP1, 150, 0, 550, 2, 650, 25, “asteroid.png”, 50,50
 AsteroidP2, 150, 625, 1175, 2, 650, 25, “asteroid.png”,50,50  
 AsteroidL2P1, 150,0,550,2,-100,25, "asteroid.png",50,50
+AsteroidL2P2, 150,625,1175,2,-100,25, "asteroid.png",50,50
 RocketP1, 100,0,525,2,300,25,"spaceship.png",50,25
 RocketP2, 100,625,1170,2,300,25,"spaceship.png",50,50
 FireballP1,150, 550, 0, -2, 600, 25, fireball(left).png”, 50,50
 FireballP2,150, 1200, 650, -2, 600, 25, fireball(left).png”, 50,50
-Dest1,300,-1500,30,"planet.png",90,90
-Dest2,900,-1500,30,"planet.png",90,90
+Dest1,300,-1500,45,"planet.png",90,90
+Dest2,900,-1500,45,"planet.png",90,90
 Coin1,15
 Coin2,15

@@ -449,8 +449,14 @@ class Game():
                 
             if l[0] == "AsteroidL2P1": #P1 means player1, only available for level2
                 cnt=0
-                for i in range(2): #first layer of asteroids
+                for i in range(2): #third layer of asteroids
                     self.asteroids1.append(Asteroid(cnt*int(l[1])+cnt*100,int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"asteroid.png",int(l[8]),int(l[9]),0)) 
+                    cnt+=1
+                    
+            if l[0] == "AsteroidL2P2": #P1 means player1, only available for level2
+                cnt=0
+                for i in range(2): #third layer of asteroids
+                    self.asteroids2.append(Asteroid(cnt*int(l[1])+cnt*100,int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"asteroid.png",int(l[8]),int(l[9]),0)) 
                     cnt+=1
                 
             if l[0]=="RocketP1":
@@ -500,6 +506,16 @@ class Game():
                     self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
                 print (self.fireballs2)
+            if l[0]=="FireballP1L3":
+                cnt=0
+                for i in range(3):
+                    self.fireballs1.append(Fireball((550-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),0))
+                    cnt+=1
+            if l[0]=="FireballP2L3":
+                cnt=0
+                for i in range(3):
+                    self.fireballs2.append(Fireball((550-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),0))
+                    cnt+=1
                 
             if l[0]=="Coin1":
                 numcoins1=0 #to check number of coins in the level
@@ -843,9 +859,9 @@ def mouseClicked():
         level=2 #SETTING LEVEL
         game.level = level
         maxy=-1500
-        game.maxy=-1500  #USING VAL FROM LEVEL 1 FOR NOW
-        maxmid=-1050
-        game.maxmid=-1050
+        game.maxy=-1500  
+        maxmid=-1280
+        game.maxmid=-1280
         time=60
         game.time=60
         
@@ -857,9 +873,9 @@ def mouseClicked():
         level=3 #SETTING LEVEL
         game.level = level
         maxy=-2000
-        game.maxy=-2000  #USING VAL FROM LEVEL 1 FOR NOW
-        maxmid=-1050
-        game.maxmid=-1050
+        game.maxy=-2000  
+        maxmid=-1620
+        game.maxmid=-1620
         time=60
         game.time=60
         
