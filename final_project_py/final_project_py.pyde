@@ -44,7 +44,7 @@ class Alien(Character):
             if self.x+(self.r*2)>=game.w//2:
                 self.x=(game.w//2)-(self.r*2)
                 
-            if self.y <= game.h // 2 and self.y > -620: #CHANGE 620 to endgame
+            if self.y <= game.h // 2 and self.y > game.maxmid: #CHANGE 620 to endgame
                 game.y0 += self.dy
                 
             if self.y+(self.r*2)>=game.h:
@@ -64,6 +64,7 @@ class Alien(Character):
                     # the delay function built in to processing will prevent one collision from counting as many and removing all three lives at one 
                     delay(200)
                     self.y=750
+                    game.y0=0
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
@@ -73,6 +74,7 @@ class Alien(Character):
                     game.numlives1-=1
                     delay(200)
                     self.y=750
+                    game.y0=0
                     print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
@@ -104,7 +106,7 @@ class Alien(Character):
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
-                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time)*10)
+                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time)*10) #score calculation
                 game.gamestate1 = "won"
                            
         
@@ -161,8 +163,10 @@ class Alien2(Character):
             if self.y+(self.r*2)>=game.h:
                 self.y=game.h-(self.r*2)
                 
-            if self.y+self.r<=game.maxy:
+            if self.y<=game.maxy:
                 self.y=game.maxy
+                
+            
             
             # asteroid collision   
             for x in game.asteroids2:
@@ -171,6 +175,7 @@ class Alien2(Character):
                     game.numlives2-=1
                     delay(200)
                     self.y=750
+                    game.y1=0
                     print(game.numlives2)
                     if game.numlives2<=0:
                         game.gamestate2="over"
@@ -180,6 +185,7 @@ class Alien2(Character):
                     game.numlives2-=1
                     delay(200)
                     self.y=750
+                    game.y1=0
                     print(game.numlives2)
                     if game.numlives1<=0:
                         game.gamestate2="over"
@@ -296,7 +302,7 @@ class Destination(Character):
         Character.__init__(self,x,y,r,img,w,h) 
         self.dx=0
         self.dy=0
-        self.y1=self.y
+        # self.y1=self.y
         self.which_y=which_y
         
     def update(self):
@@ -308,6 +314,7 @@ class Destination(Character):
             image(self.img,self.x,self.y-game.y0)
         else:
             image(self.img,self.x,self.y-game.y1)
+            # print("dest2: ",self.y)
         # print("planet y: ", self.y)
         
 
@@ -438,6 +445,13 @@ class Game():
                     self.asteroids2.append(Asteroid(625+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"asteroid.png",int(l[8]),int(l[9]),1))
                     cnt+=1
                 # print(self.asteroids2)
+                
+                
+            if l[0] == "AsteroidL2P1": #P1 means player1, only available for level2
+                cnt=0
+                for i in range(2): #first layer of asteroids
+                    self.asteroids1.append(Asteroid(cnt*int(l[1])+cnt*100,int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"asteroid.png",int(l[8]),int(l[9]),0)) 
+                    cnt+=1
                 
             if l[0]=="RocketP1":
                 cnt=0
@@ -816,8 +830,8 @@ def mouseClicked():
         game.level = level
         maxy=-1000
         game.maxy=-1000
-        maxmid=-1050
-        game.maxmid=-1050
+        maxmid=-620
+        game.maxmid=-620
         time=60
         game.time=60
         game.loadStage()
@@ -828,8 +842,8 @@ def mouseClicked():
         game.gamestate2="play"
         level=2 #SETTING LEVEL
         game.level = level
-        maxy=-1000
-        game.maxy=-1000  #USING VAL FROM LEVEL 1 FOR NOW
+        maxy=-1500
+        game.maxy=-1500  #USING VAL FROM LEVEL 1 FOR NOW
         maxmid=-1050
         game.maxmid=-1050
         time=60
