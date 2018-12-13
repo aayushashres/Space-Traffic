@@ -79,7 +79,11 @@ class Alien(Character):
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # Rocket Part
-            if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
+            ys = [] 
+            for i in game.rockets2: 
+                ys.append(i.y)
+            if self.y <= max(ys) + game.rockets2[1].h and self.y >= min(ys):  
+           # if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
                 # part of the game is that you must move on the next row of rockets before they move off screen, so if you dont, you still lose a life and start over
                 for x in game.rockets:
                     if self.distance(x) <= self.r + x.r: 
@@ -189,8 +193,14 @@ class Alien2(Character):
                     print(game.numlives2)
                     if game.numlives1<=0:
                         game.gamestate2="over"
+                        
+                        
             # Rocket Part 
-            if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
+            ys = [] # in order to avoid hardcoding the range in which there are rockets so that we can include rockets in other levels at different ranges
+            for i in game.rockets2: # ys is a list of all the y values of the rockets which are all in the list rockets2, this for loop appends all the y values to this list
+                ys.append(i.y)
+            if self.y <= max(ys) + game.rockets2[1].h and self.y >= min(ys):  # the range is between the minimum and maximum y
+         #   if self.y <= 350 and self.y >= 20: # if the alien is in the segment of the game that contains the rockets 
                 # part of the game is that you must move on the next row of rockets before they move off screen, so if you dont, you still lose a life and start over
                 for x in game.rockets2: # change from alien 1
                     if self.distance(x) <= self.r + x.r: 
@@ -493,6 +503,45 @@ class Game():
                 for i in range(3):
                     self.rockets2.append(Rocket(960+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
                     cnt+=1
+            if l[0]=="RocketL2P1":
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket((cnt*int(l[1])+cnt*100),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket(120+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets.append(Rocket(240+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"left"))
+                    cnt+=1
+                cnt = 0
+                for i in range(3):
+                    self.rockets.append(Rocket(360+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),0,"right"))
+                    cnt+=1 
+            if l[0]=="RocketL2P2":
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket((600+(cnt*int(l[1])+cnt*100)),int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(720+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(840+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-200,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"left"))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.rockets2.append(Rocket(960+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-300,int(l[6]),"spaceship.png",int(l[8]),int(l[9]),1,"right"))
+                    cnt+=1     
+                    
+                    
+                    
+                    
+
                     
             if l[0]=="FireballP1":
                 cnt=0
