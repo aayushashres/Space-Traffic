@@ -113,6 +113,8 @@ class Alien(Character):
                 if self.between_rockets(game.rockets) == False: #self.keyHandler[UP] == True 
                     for i in range(1): # to prevent losing all three lives at once 
                         game.numlives1-=1
+                        x.music.rewind()
+                        x.music.play()
                         self.y=750
                         game.y0 = 0
                         print(game.numlives1)
@@ -242,6 +244,8 @@ class Alien2(Character):
                 if self.between_rockets(game.rockets2) == False: #self.keyHandler[UP] == True 
                     for i in range(1): # to prevent losing all three lives at once 
                         game.numlives2-=1 # different from alien 1
+                        x.music.rewind()
+                        x.music.play()
                         self.y=750
                         game.y1 = 0 # change from alien 1 
                         print(game.numlives2)
@@ -321,6 +325,7 @@ class Rocket(Character):
         self.dx=dx
         self.which_y=which_y
         self.side = side 
+        self.music = player.loadFile(path+"/sounds/rocket.mp3")   
         if self.side == "right":
             self.dx = -self.dx
     def update(self):
