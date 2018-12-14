@@ -14,16 +14,17 @@ class Character():
         self.dy=0
     
     def display(self):
-        print("xyz")
+        return
             
     def update(self):
-        print("xyz")    
+        return 
 class Alien(Character):
     def __init__(self,x,y,r,img,w,h):
         Character.__init__(self,x,y,r,img,w,h)
         self.keyHandler={LEFT:False, RIGHT:False, UP:False, DOWN:False}
     def update(self):
-        if game.gamestate1=="play":
+        
+        if game.gamestate1=="play": #character only moves if in play state
             if self.keyHandler[LEFT]:
                 self.dx = -5
             elif self.keyHandler[RIGHT]:
@@ -39,13 +40,13 @@ class Alien(Character):
                 
             self.x+=self.dx
             self.y+=self.dy
-            
+        #checking boundaries
             if self.x-self.r<0:
                 self.x=self.r
             if self.x+(self.r*2)>=game.w//2:
                 self.x=(game.w//2)-(self.r*2)
                 
-            if self.y <= game.h // 2 and self.y > game.maxmid: #CHANGE 620 to endgame
+            if self.y <= game.h // 2 and self.y > game.maxmid: 
                 game.y0 += self.dy
                 
             if self.y+(self.r*2)>=game.h:
@@ -53,8 +54,8 @@ class Alien(Character):
                 
             if self.y<=game.maxy:
                 self.y=game.maxy
-            # print(game.time1)
-                
+        
+             #gameover if time limit exceeded    
             if game.time1>60:
                 game.gamestate1="over"
             
@@ -73,7 +74,7 @@ class Alien(Character):
                     delay(200)
                     self.y=750
                     game.y0=0
-                    print(game.numlives1)
+                    # print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # fireball collision        
@@ -85,7 +86,7 @@ class Alien(Character):
                     delay(200)
                     self.y=750
                     game.y0=0
-                    print(game.numlives1)
+                    # print(game.numlives1)
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # Rocket Part
@@ -117,7 +118,7 @@ class Alien(Character):
                         x.music.play()
                         self.y=750
                         game.y0 = 0
-                        print(game.numlives1)
+                    
                         if game.numlives1<=0:                               
                             game.gamestate1="over"
                     delay(200)
@@ -176,7 +177,7 @@ class Alien2(Character):
             if self.x+(self.r*2)>game.w:
                 self.x=game.w-(self.r*2)
 
-            if self.y <= game.h // 2 and self.y > game.maxmid: #CHANGE 620 to endgame
+            if self.y <= game.h // 2 and self.y > game.maxmid: 
                 game.y1 += self.dy
                 
             if self.y+(self.r*2)>=game.h:
@@ -199,7 +200,7 @@ class Alien2(Character):
                     delay(200)
                     self.y=750
                     game.y1=0
-                    print(game.numlives2)
+                    # print(game.numlives2)
                     if game.numlives2<=0:
                         game.gamestate2="over"
             # fireball collision
@@ -211,7 +212,7 @@ class Alien2(Character):
                     delay(200)
                     self.y=750
                     game.y1=0
-                    print(game.numlives2)
+                
                     if game.numlives1<=0:
                         game.gamestate2="over"
                         
@@ -248,7 +249,7 @@ class Alien2(Character):
                         x.music.play()
                         self.y=750
                         game.y1 = 0 # change from alien 1 
-                        print(game.numlives2)
+                    
                         if game.numlives2<=0:                               
                             game.gamestate2="over"
                     delay(200)
@@ -338,7 +339,7 @@ class Rocket(Character):
                 self.x = self.x2   
     def display(self):        
         if self.which_y == 0:
-            image (self.img,self.x,self.y-game.y0) #errorhere
+            image (self.img,self.x,self.y-game.y0) 
         else:
             image (self.img,self.x,self.y-game.y1)
 
@@ -359,10 +360,6 @@ class Destination(Character):
             image(self.img,self.x,self.y-game.y0)
         else:
             image(self.img,self.x,self.y-game.y1)
-            # print("dest2: ",self.y)
-        # print("planet y: ", self.y)
-        
-
         
 class Coins(Character):
     def __init__(self,x,y,r,img,w,h,which_y):
@@ -378,7 +375,7 @@ class Coins(Character):
     
     #to make sure coins dont overlap
     def coincollision(self):
-        if self.which_y==0:
+        if self.which_y==0: #0 is for player1, 1 is for player2
             
             for x in game.coins1:
                 
@@ -395,13 +392,6 @@ class Coins(Character):
     
     def distance(self,target): #dist between two coins
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
-    
-   
-
-    
-    
-        
-    
 
 level=0
 maxy=0
@@ -416,8 +406,7 @@ class Game():
         self.maxy=maxy  #This will check the upper boundry for the character
         self.maxmid=maxmid #This is the y position after which alien can move to the uper half of the screen)
         self.time=time
-        # self.start_x = s_x
-        # self.end_x = e_x
+    
         self.pause=False
         self.alien=Alien(self.w//4,self.h-20,20,"alien2.png",40,40)
         self.alien2=Alien2(self.w//2,self.h-20,20,"alien2.png",40,40)
@@ -442,16 +431,11 @@ class Game():
         self.lives=loadImage(path+"/images/life.png")
         self.coin=loadImage(path+"/images/coin.png")
         
-        
-        # self.dest1=Destination1(self.w//4,-1000,30,"planet.png",60,60,0)
-        # self.dest2=Destination1(self.w//2,-1000,30,"planet.png",60,60,1)
-        
         self.bg=loadImage(path+"/images/spaceBG.png")
         self.bg2=loadImage(path+"/images/spaceBG.png")
         self.rocketbg1=loadImage(path+"/images/rocketbg.jpg")
         self.bgmenu=loadImage(path+"/images/menubg.png")
         self.instr=loadImage(path+"/images/instructions.png")
-        
         
         self.asteroids1=[]
         self.asteroids2=[]
@@ -465,13 +449,10 @@ class Game():
         self.coins2=[]
         
     def loadStage(self):
-        # print("Now loading stage")
-        
+    
         file=open(path+"/level"+str(self.level)+".csv","r")
-        # print(file)
         for l in file:
             l=l.strip().split(",")
-            # print(l)
             if l[0] == "AsteroidP1": #P1 means player1, P2 is player2. adding asteroids to list
                 cnt=0
                 for i in range(2): #first layer of asteroids
@@ -481,7 +462,6 @@ class Game():
                 for i in range(3): #second layer of asteroids
                     self.asteroids1.append(Asteroid((cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"asteroid.png",int(l[8]),int(l[9]),0))
                     cnt+=1
-                # print(self.asteroids1)
             if l[0]=="AsteroidP2":
                 cnt=0
                 for i in range(2):
@@ -491,8 +471,7 @@ class Game():
                 for i in range(3):
                     self.asteroids2.append(Asteroid(625+(cnt*int(l[1])+cnt*50),int(l[2]),int(l[3]),int(l[4]),int(l[5])-100,int(l[6]),"asteroid.png",int(l[8]),int(l[9]),1))
                     cnt+=1
-                # print(self.asteroids2)
-                
+
                 
             if l[0] == "AsteroidL2P1": #P1 means player1, only available for level2
                 cnt=0
@@ -662,12 +641,7 @@ class Game():
             if l[0]=="Dest2":
                 self.dest2=Destination(int(l[1]),int(l[2]),int(l[3]) ,"planet.png", int(l[5]) ,int(l[6]),1)
                 
-            
-                
-    
-                
-                
-        
+
                     
     def loseLife(self, side):
         # print("Subtract 1 from player's life")
@@ -690,22 +664,13 @@ class Game():
         image (self.bg,0,self.h-y0,self.w,y0,0,0,self.w,y0)
         
         
-       # image(self.rocketbg1,0,20,self.w,350-y0,0,y0,self.w,330)
-       # image(self.rocketbg1,0,350-self.y0,self.w,y0,0,20,self.w,y0)
-       # image (self.rocketbg1,0,30,self.w,300-self.y0,0,y0,self.w,self.h)
-        #image (self.rocketbg1,0,250-y0,self.w,y0,0,0,self.w,y0)
         
         image (self.bg2,self.w//2,0,self.w,self.h-y1,0,y1,self.w,self.h) 
         image (self.bg2,self.w//2,self.h-y1,self.w,y1,0,0,self.w,y1)
-        # print (self.h-y)
-
-        # image (self.bg,0,0,self.w,self.h)
+ 
         line(self.w//2,0,self.w//2,800)
         for x in self.asteroids1:
-            #print("Displaying asteriods now")
-            x.display()
-        # self.dest.display()
-        
+            x.display()        
         for x in self.asteroids2:
             x.display()
             
@@ -726,26 +691,26 @@ class Game():
         self.dest1.display()
         self.dest2.display()
         
-        # Timer bar for game 1
+        # Timer bars
         stroke(255)
         fill(255)
         text("TIME",50,40)
         text("TIME",self.w//2+50,40)       
         fill(0)
         rect(50,50,120,20)
-        if self.gamestate1 == "play": # when the game is lost, the time will stop counting downwww
+        if self.gamestate1 == "play": # when the game is lost, the time will stop counting down
             self.time1=(self.framerate//60)
             fill(255)
             rect(50,50,max(0,120-(self.time1*2)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
         fill(0)
         rect((self.w//2)+50,50,120,20)
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
-            # self.time1=(self.framerate//60)       
+            self.time1=(self.framerate//60)       
             fill(255)
             rect((self.w//2)+50,50,max(0,120-(self.time1*2)),20)
 
         # textSize(30)
-        text(self.time1,160,20)
+        # text(self.time1,160,20)
 
         #LIVES DISPLAY
         for i in range(self.numlives1):
@@ -794,11 +759,8 @@ class Game():
             f.update()
     
         if game.time1>60 and game.gamestate2!="over":
-            game.gamestate2=="over"
+            game.gamestate2="over"
         
-            
-        # self.dest1.update()
-        # self.dest2.update()
             
             
         
@@ -806,17 +768,10 @@ game=Game(1200,800,level,maxy,maxmid,time)
 
 def setup():
    size(game.w,game.h)
-   # game.loadStage()
    
-   
-   
-   # if game.gamestate1=="play" and game.gamestate2=="play":
-   #     # print(game.gamestate1, game.gamestate2)
-   #     game.loadStage()
-        
-   #game.loadStage()
    
 def draw():
+    # print("{}, {}".format(game.gamestate1, game.gamestate2))
     # print(game.gamestate1, game.gamestate2, level)
     if game.pause==False:
         
@@ -850,7 +805,6 @@ def draw():
             
             
         elif game.gamestate1=="instruction" and game.gamestate2=="instruction":
-                # print("reached")
                 image(game.bgmenu,0,0,1200,800)
                 image(game.instr,game.w//5.5,game.h//5,800,400)
                 
@@ -863,11 +817,11 @@ def draw():
         
         
         elif game.gamestate1=="play" and game.gamestate2=="play":
-            # print("states ok")
+
             game.display()
             game.music.play()
             
-    
+   #CONDITIONS TO DISPLAY GAME WON/OVER MESSAGE ON EACH SIDE 
         if game.gamestate1=="over":
             game.display()
             fill(255,0,0)
@@ -887,11 +841,7 @@ def draw():
             text("SCORE: "+str(game.score1),0,game.h//3)
             text("Gameover",game.w//2,game.h//2)
             text("SCORE: "+str(game.score2),game.w//2,game.h//3)
-            fill(109,108,104)
-            rect(500,650,200,50)
-            textSize(30)
-            fill(0)
-            text("NEW GAME" ,510,680)
+            
         if game.gamestate1=="won":
             game.display()
             fill(0,255,0) # won will be in green 
@@ -935,6 +885,12 @@ def draw():
             fill(0,255,0)
             text("Game Won by Player 2!",game.w//2,game.h//2)
             text("SCORE: "+str(game.score2),game.w//2,game.h//3)
+        if ((game.gamestate1=="over" and game.gamestate2=="over") or (game.gamestate1=="won" and game.gamestate2=="won") or (game.gamestate1=="over" and game.gamestate2=="won") or (game.gamestate1=="won" and game.gamestate2=="over")) :   
+            fill(109,108,104)
+            rect(500,650,200,50)
+            textSize(30)
+            fill(0)
+            text("NEW GAME" ,510,680)
             
         
             
@@ -967,6 +923,7 @@ def keyPressed():
             game.pause=False
         else:
             game.pause=True    
+
         
         
 def keyReleased():
@@ -1042,7 +999,7 @@ def mouseClicked():
     if game.w//2 < mouseX < game.w//2 + 200 and game.h//3+400 < mouseY < game.h//3 + 450 and   game.gamestate1=="instruction" and game.gamestate2=="instruction":
         game.gamestate1="menu"
         game.gamestate2="menu"
-    if 500<mouseX<700 and 650<mouseY<700 and game.gamestate1=="over" and game.gamestate2=="over": #NEW GAME, reinitialize everything to None or empty lists
+    if 500<mouseX<700 and 650<mouseY<700 and ((game.gamestate1=="over" and game.gamestate2=="over") or (game.gamestate1=="won" and game.gamestate2=="won") or (game.gamestate1=="over" and game.gamestate2=="won") or (game.gamestate1=="won" and game.gamestate2=="over")) : #NEW GAME, reinitialize everything to None or empty lists
         game.level=0
         game.gamestate1="menu"
         game.gamestate2="menu"
@@ -1059,11 +1016,26 @@ def mouseClicked():
         game.coins1=[]
         game.coins2=[]
         
+        game.time=60
+        game.framerate=0
+        game.time1=0
         
-        print(game.gamestate1, game.level)
+        game.coincount1=0
+        game.coincount2=0
         
+        game.numlives1=3
+        game.numlives2=3
+        game.y0=0
+        game.y1=0
+        #put aliens back at starting line
+        game.alien.y = game.h-20
+        game.alien.x = 300
         
-        # rect(500,650,200,50)
+        game.alien2.y = game.h-20
+        game.alien2.x = 900
+        # print(game.gamestate1, game.level)
+        
+    
         
 
     
