@@ -123,16 +123,6 @@ class Alien(Character):
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
                 game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                 
-                
-                file=open(path+"/level"+str(game.level)+".csv","r")
-            
-                for l in file:
-                    l=l.strip().split(",")
-                    if l[0]=="Score":
-                        if game.score1>=l[1]:
-                            l[1]=game.score1
-                file.close()
-                
                 game.gamestate1 = "won"
                 
                            
@@ -261,14 +251,6 @@ class Alien2(Character):
             # win check when destination is reached 
             if self.distance(game.dest2) <= (self.r + game.dest2.r):
                 game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
-                file=open(path+"/level"+str(game.level)+".csv","r")
-            
-                for l in file:
-                    l=l.strip().split(",")
-                    if l[0]=="Score":
-                        if game.score2>=l[1]:
-                            l[1]=game.score2
-                file.close()
                 game.gamestate2 = "won"
                 
             #if time up, gameover
@@ -772,14 +754,14 @@ class Game():
         #COINS DISPLAY
         fill(255,0,0)
         rect(505,60,60,25)
-        rect(1105,60,60,250)
+        rect(1105,60,60,25)
     
         image(self.coin,540,60)
-        image(self.coin,1040,60)
+        image(self.coin,1140,60)
    
         textSize(20)
         fill(255)
-        text(str(self.coincount1)+"X", 1110,80)
+        text(str(self.coincount2)+"X", 1110,80)
         text(str(self.coincount1)+"X", 510,80)
         
         self.alien.display()
@@ -894,7 +876,9 @@ def draw():
             fill(255,0,0)
             textSize(50)
             text("Gameover",0,game.h//2)
+            text("SCORE: "+str(game.score1),0,game.h//3)
             text("Gameover",game.w//2,game.h//2)
+            text("SCORE: "+str(game.score2),game.w//2,game.h//3)
         if game.gamestate1=="won":
             game.display()
             fill(0,255,0) # won will be in green 
@@ -906,27 +890,38 @@ def draw():
             fill(0,255,0)
             textSize(50)
             text("Game Won!",game.w//2,game.h//2)
-            text("SCORE: "+str(game.score1),game.w//2,game.h//3)
+            text("SCORE: "+str(game.score2),game.w//2,game.h//3)
         if game.gamestate1 == "won" and game.gamestate2 == "won":
             game.display()
             fill(0,255,0)
             textSize(50)
-            text("Game Won!",0,game.h//2)
-            text("Game Won!",game.w//2,game.h//2)
+            text("SCORE: "+str(game.score2),game.w//2,game.h//3)
+            text("SCORE: "+str(game.score1),0,game.h//3)
+            if game.score1>game.score2:
+                
+                text("Game Won by Player 1!",0,game.h//2)
+                
+            elif game.score2>game.score1:
+                text("Game Won by player 2!",game.w//2,game.h//2)
+                
         if game.gamestate1=="won" and game.gamestate2=="over":
             game.display()
             fill(0,255,0)
             textSize(50)
-            text("Game Won!",0,game.h//2)
+            text("Game Won by Player 1!",0,game.h//2)
+            text("SCORE: "+str(game.score1),0,game.h//3)
             fill(255,0,0)
             text("Gameover",game.w//2,game.h//2)
+            text("SCORE: "+str(game.score2),game.w//2,game.h//3)
         if game.gamestate2=="won" and game.gamestate1=="over":
             game.display()
             fill(255,0,0)
             textSize(50)
             text("Gameover",0,game.h//2)
+            text("SCORE: "+str(game.score1),0,game.h//3)
             fill(0,255,0)
-            text("Game Won!",game.w//2,game.h//2)
+            text("Game Won by Player 2!",game.w//2,game.h//2)
+            text("SCORE: "+str(game.score2),game.w//2,game.h//3)
             
         
             
