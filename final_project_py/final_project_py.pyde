@@ -56,7 +56,7 @@ class Alien(Character):
                 self.y=game.maxy
         
              #gameover if time limit exceeded    
-            if game.time1>60 and game.gamestate1!="over":
+            if game.time1>60 and game.gamestate1!="won":
                 game.gamestate1="over"
             
             #COIN COLLECTION
@@ -74,7 +74,7 @@ class Alien(Character):
                     delay(200)
                     self.y=750
                     game.y0=0
-                    # print(game.numlives1)
+                
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # fireball collision        
@@ -86,7 +86,7 @@ class Alien(Character):
                     delay(200)
                     self.y=750
                     game.y0=0
-                    # print(game.numlives1)
+                
                     if game.numlives1<=0:
                         game.gamestate1="over"
             # Rocket Part
@@ -192,7 +192,7 @@ class Alien2(Character):
             
             # asteroid collision   
             for x in game.asteroids2:
-                # print(self.distance(x))
+            
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives2-=1
                     x.music.rewind()
@@ -200,7 +200,7 @@ class Alien2(Character):
                     delay(200)
                     self.y=750
                     game.y1=0
-                    # print(game.numlives2)
+               
                     if game.numlives2<=0:
                         game.gamestate2="over"
             # fireball collision
@@ -257,14 +257,7 @@ class Alien2(Character):
             if self.distance(game.dest2) <= (self.r + game.dest2.r):
                 game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
                 game.gamestate2 = "won"
-                
-            #if time up, gameover
-            
-            # if game.time1>60 and game.gamestate2!="over":
-            #     game.gamestate2=="over"
-    
-                           
-    
+       
     def distance(self,target): #dist between asteroid and player
         return ((self.x-target.x)**2 + (self.y-target.y)**2)**0.5
     
@@ -282,6 +275,7 @@ class Alien2(Character):
     def display(self):
         self.update()
         image(self.img,self.x,self.y-game.y1,self.w,self.h)
+        # ellipse(self.x+self.r, self.y-game.y1+self.r, self.r*2, self.r*2)
     
     
 class Asteroid(Character):
@@ -346,8 +340,6 @@ class Rocket(Character):
 class Destination(Character):
     def __init__(self,x,y,r,img,w,h,which_y):
         Character.__init__(self,x,y,r,img,w,h) 
-        self.dx=0
-        self.dy=0
         # self.y1=self.y
         self.which_y=which_y
         
@@ -360,6 +352,7 @@ class Destination(Character):
             image(self.img,self.x,self.y-game.y0)
         else:
             image(self.img,self.x,self.y-game.y1)
+            # ellipse(self.x+self.r, self.y-game.y1+self.r, self.r*2, self.r*2)
         
 class Coins(Character):
     def __init__(self,x,y,r,img,w,h,which_y):
@@ -600,7 +593,7 @@ class Game():
                 for i in range(3):
                     self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
-                # print (self.fireballs2)
+          
             if l[0]=="FireballP1L3":
                 cnt=0
                 for i in range(3):
@@ -617,15 +610,14 @@ class Game():
                 numcoins2=0
                 cointemp=None
                 cointemp2=None
-                # for i in range(5):    
+              
                 while numcoins1 < int(l[1]) and numcoins2 < int(l[1]):
-                    # print("CHECK")
-                    print(self.maxy)
+
                     x=random.randint(0,550)
                     y=random.randint(self.maxy,700)
                     x1=random.randint(620,1150)
                     y1=random.randint(self.maxy,700)
-                    print(x,y)
+                
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
                     cointemp2=(Coins(x1,y1,12,"coin.png",24,24,1))
                     
@@ -645,7 +637,7 @@ class Game():
 
                     
     def loseLife(self, side):
-        # print("Subtract 1 from player's life")
+    
         if side == "RIGHT":
             self.numlives1-=1
             self.alien2.y = 750
@@ -656,7 +648,7 @@ class Game():
             self.y0 = 0
                 
     def display(self):
-        # print("now displaying")
+   
         self.framerate+=1
         y0=self.y0 % self.h
         y1=self.y1%self.h
@@ -767,8 +759,7 @@ def setup():
    
    
 def draw():
-    # print("{}, {}".format(game.gamestate1, game.gamestate2))
-    # print(game.gamestate1, game.gamestate2, level)
+
     if game.pause==False:
         
         background(0)
@@ -966,8 +957,8 @@ def mouseClicked():
             game.level = level
             maxy=-1500
             game.maxy=-1500  
-            maxmid=-1280
-            game.maxmid=-1280
+            maxmid=-1120
+            game.maxmid=-1120
             time=60
             game.time=60
             
@@ -991,7 +982,7 @@ def mouseClicked():
     if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+300 < mouseY < game.h//3 + 350 and   game.gamestate1=="menu" and game.gamestate2=="menu":
         game.gamestate1="instruction"
         game.gamestate2="instruction"
-        # print(game.gamestate1,game.gamestate2)
+        
     if game.w//2 < mouseX < game.w//2 + 200 and game.h//3+400 < mouseY < game.h//3 + 450 and   game.gamestate1=="instruction" and game.gamestate2=="instruction":
         game.gamestate1="menu"
         game.gamestate2="menu"
@@ -1031,7 +1022,7 @@ def mouseClicked():
         
         game.alien2.y = game.h-20
         game.alien2.x = 900
-        # print(game.gamestate1, game.level)
+       
         
     
         
