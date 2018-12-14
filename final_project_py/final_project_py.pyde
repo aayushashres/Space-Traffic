@@ -56,7 +56,7 @@ class Alien(Character):
                 self.y=game.maxy
         
              #gameover if time limit exceeded    
-            if game.time1>60:
+            if game.time1>60 and game.gamestate1!="over":
                 game.gamestate1="over"
             
             #COIN COLLECTION
@@ -186,7 +186,7 @@ class Alien2(Character):
             if self.y<=game.maxy:
                 self.y=game.maxy
             
-            if game.time1>60:
+            if game.time1>60 and game.gamestate2!="won" :
                 game.gamestate2="over"
             
             
@@ -213,7 +213,7 @@ class Alien2(Character):
                     self.y=750
                     game.y1=0
                 
-                    if game.numlives1<=0:
+                    if game.numlives2<=0:
                         game.gamestate2="over"
                         
             #COINS
@@ -620,11 +620,12 @@ class Game():
                 # for i in range(5):    
                 while numcoins1 < int(l[1]) and numcoins2 < int(l[1]):
                     # print("CHECK")
+                    print(self.maxy)
                     x=random.randint(0,550)
-                    y=random.randrange(maxy,700)
+                    y=random.randint(self.maxy,700)
                     x1=random.randint(620,1150)
-                    y1=random.uniform(maxy,700)
-                    # print(x,y)
+                    y1=random.randint(self.maxy,700)
+                    print(x,y)
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
                     cointemp2=(Coins(x1,y1,12,"coin.png",24,24,1))
                     
@@ -757,11 +758,6 @@ class Game():
             f.update()
         for f in self.fireballs2:
             f.update()
-    
-        if game.time1>60 and game.gamestate2!="over":
-            game.gamestate2="over"
-        
-            
             
         
 game=Game(1200,800,level,maxy,maxmid,time)
