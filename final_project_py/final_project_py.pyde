@@ -52,6 +52,11 @@ class Alien(Character):
                 
             if self.y<=game.maxy:
                 self.y=game.maxy
+            # print(game.time1)
+                
+            if game.time1>60:
+                game.gamestate1="over"
+            
             #COIN COLLECTION
             for x in game.coins1:
                 if self.distance(x)<=self.r+x.r:
@@ -111,7 +116,7 @@ class Alien(Character):
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
-                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time)*10) #score calculation
+                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                 
                 
                 file=open(path+"/level"+str(game.level)+".csv","r")
@@ -182,7 +187,9 @@ class Alien2(Character):
                 
             if self.y<=game.maxy:
                 self.y=game.maxy
-                
+            
+            if game.time1>60:
+                game.gamestate2="over"
             
             
             # asteroid collision   
@@ -244,7 +251,7 @@ class Alien2(Character):
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest2) <= (self.r + game.dest2.r):
-                game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time)*10)
+                game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
                 file=open(path+"/level"+str(game.level)+".csv","r")
             
                 for l in file:
@@ -256,8 +263,9 @@ class Alien2(Character):
                 game.gamestate2 = "won"
                 
             #if time up, gameover
-            if game.time>=60:
-                game.gamestate2=="over"
+            
+            # if game.time1>60 and game.gamestate2!="over":
+            #     game.gamestate2=="over"
     
                            
     
@@ -421,7 +429,7 @@ class Game():
         self.gamestate1="menu"
         self.gamestate2="menu"
         self.framerate=0
-        self.time=0
+        self.time1=0
         
         self.score1=0
         self.score2=0
@@ -460,10 +468,10 @@ class Game():
         self.coins2=[]
         
     def loadStage(self):
-        print("Now loading stage")
+        # print("Now loading stage")
         
         file=open(path+"/level"+str(self.level)+".csv","r")
-        print(file)
+        # print(file)
         for l in file:
             l=l.strip().split(",")
             # print(l)
@@ -616,7 +624,7 @@ class Game():
                 for i in range(3):
                     self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
-                print (self.fireballs2)
+                # print (self.fireballs2)
             if l[0]=="FireballP1L3":
                 cnt=0
                 for i in range(3):
@@ -640,7 +648,7 @@ class Game():
                     y=random.randrange(maxy,700)
                     x1=random.randint(620,1150)
                     y1=random.uniform(maxy,700)
-                    print(x,y)
+                    # print(x,y)
                     cointemp=(Coins(x,y,12,"coin.png",24,24,0)) #temp coin to add a coin to check if there is collision.
                     cointemp2=(Coins(x1,y1,12,"coin.png",24,24,1))
                     
@@ -724,32 +732,24 @@ class Game():
         # Timer bar for game 1
         stroke(255)
         fill(255)
-        text("TIME",50,40)      
+        text("TIME",50,40)
+        text("TIME",self.w//2+50,40)       
         fill(0)
         rect(50,50,120,20)
         if self.gamestate1 == "play": # when the game is lost, the time will stop counting downwww
-            self.time=(self.framerate//60)
+            self.time1=(self.framerate//60)
             fill(255)
-            rect(50,50,max(0,120-(self.time)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
-        # textSize(30)
-        text(self.time,160,20)
-        
-        # right now the word time turns black when the state in game one changes -- work on that 
-        
-        #time bar for game 2
-        stroke(255)
-        fill (255)
-        text("TIME",self.w//2+50,40)        
+            rect(50,50,max(0,120-(self.time1*2)),20) #TIME is exactly 60 sec right now, may change as per level by using game.time
         fill(0)
         rect((self.w//2)+50,50,120,20)
         if self.gamestate2 == "play": # when the game is lost, the time will stop counting down 
-            self.time=(self.framerate//60)   
-                   
+            # self.time1=(self.framerate//60)       
             fill(255)
-            rect((self.w//2)+50,50,max(0,120-(self.time)),20)
+            rect((self.w//2)+50,50,max(0,120-(self.time1*2)),20)
 
-  
-        
+        # textSize(30)
+        text(self.time1,160,20)
+
         #LIVES DISPLAY
         for i in range(self.numlives1):
             image(self.lives, 40 +(i*45),80)
@@ -760,11 +760,16 @@ class Game():
             x.display()
             
         #COINS DISPLAY
+        fill(255,0,0)
+        rect(505,60,60,25)
+        rect(1105,60,60,250)
     
-        image(self.coin,550,75)
+        image(self.coin,540,60)
+        image(self.coin,1040,60)
    
         textSize(20)
         fill(255)
+        text(str(self.coincount1)+"X", 1110,80)
         text(str(self.coincount1)+"X", 510,80)
         
         self.alien.display()
@@ -791,6 +796,9 @@ class Game():
         for f in self.fireballs2:
             f.update()
     
+        if game.time1>60 and game.gamestate2!="over":
+            game.gamestate2=="over"
+        
             
         # self.dest1.update()
         # self.dest2.update()
@@ -964,47 +972,48 @@ def keyReleased():
 
 def mouseClicked():
     global level #global var accessed in order to change the level
-    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3 < mouseY < game.h//3 + 50: #for level 1
-        game.gamestate1="play" 
-        game.gamestate2="play"
-        level=1 #SETTING LEVEL
-        game.level = level
-        maxy=-1000
-        game.maxy=-1000
-        maxmid=-620
-        game.maxmid=-620
-        time=60
-        game.time=60
-        game.loadStage()
-        #set max, endpoint,time
+    if game.level==0:
+        if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3 < mouseY < game.h//3 + 50: #for level 1
+            game.gamestate1="play" 
+            game.gamestate2="play"
+            level=1 #SETTING LEVEL
+            game.level = level
+            maxy=-1000
+            game.maxy=-1000
+            maxmid=-620
+            game.maxmid=-620
+            time=60
+            game.time=60
+            game.loadStage()
+            #set max, endpoint,time
+            
+        if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+100 < mouseY < game.h//3 + 150: #for level 2
+            game.gamestate1="play" 
+            game.gamestate2="play"
+            level=2 #SETTING LEVEL
+            game.level = level
+            maxy=-1500
+            game.maxy=-1500  
+            maxmid=-1280
+            game.maxmid=-1280
+            time=60
+            game.time=60
+            
+            game.loadStage()
         
-    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+100 < mouseY < game.h//3 + 150: #for level 2
-        game.gamestate1="play" 
-        game.gamestate2="play"
-        level=2 #SETTING LEVEL
-        game.level = level
-        maxy=-1500
-        game.maxy=-1500  
-        maxmid=-1280
-        game.maxmid=-1280
-        time=60
-        game.time=60
-        
-        game.loadStage()
-    
-    if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 250: 
-        game.gamestate1="play" 
-        game.gamestate2="play"
-        level=3 #SETTING LEVEL
-        game.level = level
-        maxy=-2000
-        game.maxy=-2000  
-        maxmid=-1620
-        game.maxmid=-1620
-        time=60
-        game.time=60
-        
-        game.loadStage()
+        if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+200 < mouseY < game.h//3 + 250: 
+            game.gamestate1="play" 
+            game.gamestate2="play"
+            level=3 #SETTING LEVEL
+            game.level = level
+            maxy=-2000
+            game.maxy=-2000  
+            maxmid=-1620
+            game.maxmid=-1620
+            time=60
+            game.time=60
+            
+            game.loadStage()
         
         
     if game.w//2.5 < mouseX < game.w//2.5 + 200 and game.h//3+300 < mouseY < game.h//3 + 350 and   game.gamestate1=="menu" and game.gamestate2=="menu":
