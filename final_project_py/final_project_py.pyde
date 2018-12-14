@@ -57,6 +57,7 @@ class Alien(Character):
         
              #gameover if time limit exceeded    
             if game.time1>60 and game.gamestate1!="won":
+                game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                 game.gamestate1="over"
             
             #COIN COLLECTION
@@ -76,6 +77,7 @@ class Alien(Character):
                     game.y0=0
                 
                     if game.numlives1<=0:
+                        game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                         game.gamestate1="over"
             # fireball collision        
             for x in game.fireballs1:
@@ -88,6 +90,7 @@ class Alien(Character):
                     game.y0=0
                 
                     if game.numlives1<=0:
+                        game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                         game.gamestate1="over"
             # Rocket Part
             ys = [] 
@@ -119,14 +122,19 @@ class Alien(Character):
                         self.y=750
                         game.y0 = 0
                     
-                        if game.numlives1<=0:                               
+                        if game.numlives1<=0: 
+                            game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation                              
                             game.gamestate1="over"
                     delay(200)
             # win check when destination is reached 
             if self.distance(game.dest1) <= (self.r + game.dest1.r):
                 game.score1+= (game.numlives1*100) + (game.coincount1*10) +((60-game.time1)*10) #score calculation
                 
+                
                 game.gamestate1 = "won"
+            
+   
+            
                 
                            
         
@@ -187,6 +195,7 @@ class Alien2(Character):
                 self.y=game.maxy
             
             if game.time1>60 and game.gamestate2!="won" :
+                game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
                 game.gamestate2="over"
             
             
@@ -202,6 +211,7 @@ class Alien2(Character):
                     game.y1=0
                
                     if game.numlives2<=0:
+                        game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
                         game.gamestate2="over"
             # fireball collision
             for x in game.fireballs2: #WORK ON COLLISION FOR FIREBALL
@@ -214,6 +224,7 @@ class Alien2(Character):
                     game.y1=0
                 
                     if game.numlives2<=0:
+                        game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)
                         game.gamestate2="over"
                         
             #COINS
@@ -250,7 +261,8 @@ class Alien2(Character):
                         self.y=750
                         game.y1 = 0 # change from alien 1 
                     
-                        if game.numlives2<=0:                               
+                        if game.numlives2<=0:  
+                            game.score2+= (game.numlives2*100) + (game.coincount2*10) +((60-game.time1)*10)                             
                             game.gamestate2="over"
                     delay(200)
             # win check when destination is reached 
