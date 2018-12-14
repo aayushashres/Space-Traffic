@@ -859,11 +859,14 @@ def draw():
                 else:
                     fill(255)
                 text("Return",game.w//2,game.h//3+440) 
+                
+        
         
         elif game.gamestate1=="play" and game.gamestate2=="play":
             # print("states ok")
             game.display()
             game.music.play()
+            
     
         if game.gamestate1=="over":
             game.display()
@@ -884,6 +887,11 @@ def draw():
             text("SCORE: "+str(game.score1),0,game.h//3)
             text("Gameover",game.w//2,game.h//2)
             text("SCORE: "+str(game.score2),game.w//2,game.h//3)
+            fill(109,108,104)
+            rect(500,650,200,50)
+            textSize(30)
+            fill(0)
+            text("NEW GAME" ,510,680)
         if game.gamestate1=="won":
             game.display()
             fill(0,255,0) # won will be in green 
@@ -1034,6 +1042,28 @@ def mouseClicked():
     if game.w//2 < mouseX < game.w//2 + 200 and game.h//3+400 < mouseY < game.h//3 + 450 and   game.gamestate1=="instruction" and game.gamestate2=="instruction":
         game.gamestate1="menu"
         game.gamestate2="menu"
+    if 500<mouseX<700 and 650<mouseY<700 and game.gamestate1=="over" and game.gamestate2=="over": #NEW GAME, reinitialize everything to None or empty lists
+        game.level=0
+        game.gamestate1="menu"
+        game.gamestate2="menu"
+        game.level=0
+        game.asteroids1=[]
+        game.asteroids2=[]
+        
+        game.rockets=[]
+        game.rockets2=[]
+        game.fireballs1=[]
+        game.fireballs2=[]
+        game.dest1=None
+        game.dest2=None
+        game.coins1=[]
+        game.coins2=[]
+        
+        
+        print(game.gamestate1, game.level)
+        
+        
+        # rect(500,650,200,50)
         
 
     
