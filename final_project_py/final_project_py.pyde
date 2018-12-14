@@ -472,6 +472,7 @@ class Game():
                     self.asteroids1.append(Asteroid(cnt*int(l[1])+cnt*100,int(l[2]),int(l[3]),int(l[4]),int(l[5]),int(l[6]),"asteroid.png",int(l[8]),int(l[9]),0)) 
                     cnt+=1
                     
+                    
             if l[0] == "AsteroidL2P2": #P1 means player1, only available for level2
                 cnt=0
                 for i in range(2): #third layer of asteroids
@@ -588,10 +589,17 @@ class Game():
                     self.fireballs1.append(Fireball((550-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),0))
                     cnt+=1
                 cnt=0    
+                for i in range(3):
+                    self.fireballs1.append(Fireball((550-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5])-100 ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),0))
+                    cnt+=1
             if l[0]=="FireballP2":
                 cnt=0
                 for i in range(3):
                     self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5]) ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
+                    cnt+=1
+                cnt=0
+                for i in range(3):
+                    self.fireballs2.append(Fireball((1200-(cnt*int(l[1])+cnt*100)) ,int(l[2]) ,int(l[3]) ,int(l[4]), int(l[5])-100 ,int(l[6]) ,"fireball(left).png",int(l[8]),int(l[9]),1))
                     cnt+=1
           
             if l[0]=="FireballP1L3":
