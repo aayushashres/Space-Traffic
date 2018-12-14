@@ -302,7 +302,7 @@ class Fireball(Asteroid):
         Asteroid.__init__(self,x, x1, x2,dx ,y,r,img,w,h,which_y)
         
     def update(self):
-        self.x-=2
+        self.x+=self.dx
         if self.x < self.x2:
             self.x = self.x1
     def display(self):
