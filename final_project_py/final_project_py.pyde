@@ -423,7 +423,7 @@ class Game():
         self.coincount1=0
         self.coincount2=0
         
-        self.TESTLIST = [1,2,3,4,10]
+        
         #initial num of lives is 3 for each player
         self.numlives1=3
         self.numlives2=3
@@ -1006,6 +1006,8 @@ def mouseClicked():
         game.level=0
         game.asteroids1=[]
         game.asteroids2=[]
+        game.score1=0
+        game.score2=0
         
         game.rockets=[]
         game.rockets2=[]
