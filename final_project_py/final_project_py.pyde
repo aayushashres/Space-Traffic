@@ -1,5 +1,6 @@
+add_library('minim')
 import os, time, random
-
+player = Minim(this)
 path=os.getcwd()
 class Character():
     def __init__(self,x,y,r,img,w,h):
@@ -66,6 +67,8 @@ class Alien(Character):
             for x in game.asteroids1:
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
+                    x.music.rewind()
+                    x.music.play()
                     # the delay function built in to processing will prevent one collision from counting as many and removing all three lives at one 
                     delay(200)
                     self.y=750
@@ -77,6 +80,8 @@ class Alien(Character):
             for x in game.fireballs1:
                  if self.distance(x) <= self.r+ x.r :
                     game.numlives1-=1
+                    x.music.rewind()
+                    x.music.play()
                     delay(200)
                     self.y=750
                     game.y0=0
@@ -197,6 +202,8 @@ class Alien2(Character):
                 # print(self.distance(x))
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives2-=1
+                    x.music.rewind()
+                    x.music.play()
                     delay(200)
                     self.y=750
                     game.y1=0
@@ -207,6 +214,8 @@ class Alien2(Character):
             for x in game.fireballs2: #WORK ON COLLISION FOR FIREBALL
                 if self.distance(x) <= self.r+ x.r :
                     game.numlives2-=1
+                    x.music.rewind()
+                    x.music.play()
                     delay(200)
                     self.y=750
                     game.y1=0
@@ -294,7 +303,8 @@ class Asteroid(Character):
         self.x1=x1
         self.x2=x2
         self.dx=dx
-        self.which_y = which_y    
+        self.which_y = which_y  
+        self.music = player.loadFile(path+"/sounds/collision.mp3")   
      def update(self):
          self.x+=self.dx
          if self.x > self.x2:
@@ -430,7 +440,7 @@ class Game():
         self.gamestate2="menu"
         self.framerate=0
         self.time1=0
-        
+        self.music = player.loadFile(path+"/sounds/music1.mp3")
         self.score1=0
         self.score2=0
         
@@ -866,6 +876,7 @@ def draw():
         elif game.gamestate1=="play" and game.gamestate2=="play":
             # print("states ok")
             game.display()
+            game.music.play()
     
         if game.gamestate1=="over":
             game.display()
